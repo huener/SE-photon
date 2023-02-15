@@ -43,7 +43,7 @@ public class Main extends JFrame
 			view.repaint(); // Indirectly calls View.paintComponent
 			Toolkit.getDefaultToolkit().sync(); // Updates screen
 			
-			// let splash screen display for 4 seconds (it gets drawn in view.repaint() if view.splash==true)
+			// let splash screen display for 4 seconds (it gets drawn in view.repaint() if view.splash==false)
            		if(view.splash == false) {
                 		try
                 		{
