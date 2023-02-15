@@ -10,18 +10,18 @@ import java.awt.Color;
 class View extends JPanel
 {
 	BufferedImage splash_image;
-    int splashFrames = 0;
-    boolean splash = false;
+   	int splashFrames = 0;
+    	boolean splash = false;
 
-    View(Controller c)
+    	View(Controller c)
 	{
 		c.setView(this); 	//sets the controller's view to this view instance in order for the two to be able to communicate
         
-        // loads the picture for the splash screen.
-        splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
-        // of the window matches best.
+        	// loads the picture for the splash screen.
+        	splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
+        	// of the window matches best.
 	}
-    // window is 960 x 720 by default (size set in main)
+    	// window size is set to 960 x 720 in main
 
 	public void paintComponent(Graphics g)
 	{
@@ -29,10 +29,10 @@ class View extends JPanel
 		g.setColor(new Color(0, 0, 0));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
         
-        if(splash == false) {
-            g.drawImage(splash_image, 0, 0, null);
-            //splash = true;
-        }
+        	if(splash == false) {
+            	g.drawImage(splash_image, 0, 0, null);
+            	//splash = true;
+        	}
 		
 	}
 
