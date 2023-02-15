@@ -3,6 +3,8 @@
 import javax.swing.JFrame;
 import java.awt.Toolkit;
 
+import java.util.concurrent.TimeUnit;
+
 public class Main extends JFrame
 {
 	Controller controller;
@@ -29,7 +31,7 @@ public class Main extends JFrame
 	//MAIN PROGRAM:: the actual code that is ran on start
 	public static void main(String[] args)
 	{
-        Main instance = new Main();
+        	Main instance = new Main();
 		instance.run();	//actually runs the game
 	}
 
@@ -40,6 +42,18 @@ public class Main extends JFrame
 			controller.update();
 			view.repaint(); // Indirectly calls View.paintComponent
 			Toolkit.getDefaultToolkit().sync(); // Updates screen
+			
+			// let splash screen display for 4 seconds (it gets drawn in view.repaint() if view.splash==true)
+           		if(view.splash == false) {
+                		try
+                		{
+                    			TimeUnit.SECONDS.sleep(4);
+                		} catch(Exception e) {
+                    			e.printStackTrace();
+                    			System.exit(1);
+                		}
+                		view.splash = true; // toggle splash variable so it stops showing
+            		}
 
 			// Go to sleep for 40 milliseconds
 			try
