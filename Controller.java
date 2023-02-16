@@ -69,11 +69,32 @@ class Controller implements ActionListener, KeyListener
 	{
 		if (editMode && (view.splash == true))
 		{
+			// enable editing the text fields
+			editTextFields(true);
+			
 			// arrow key behavior
 		}
 		else
 		{
-			
+			// disable text field editing
+			editTextFields(false);
 		}
 	}
+
+	void editTextFields(Boolean editVal)
+	{
+		for(int i = 0; i < data.teamRed.length; i++)
+		{
+			data.teamRed[i].idField.setEditable(editVal);
+			data.teamRed[i].nameField.setEditable(editVal);
+		}
+
+		for(int i = 0; i < data.teamGreen.length; i++)
+		{
+			data.teamGreen[i].idField.setEditable(editVal);
+			data.teamGreen[i].nameField.setEditable(editVal);
+		}
+	}
+
 }
+
