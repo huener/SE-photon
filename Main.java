@@ -2,6 +2,8 @@
 
 import javax.swing.JFrame;
 import java.awt.Toolkit;
+import java.awt.Insets;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +28,30 @@ public class Main extends JFrame
 		
 		//passes listeners through the view and game in order to have controller do the controlling
 		this.addKeyListener(controller);
+
+		//Text Field Inputs
+		view.setLayout(null);
+		Insets insets = view.getInsets();
+
+		Player teamRed[] = new Player[20];
+		for(int i = 0; i < teamRed.length; i++)
+		{
+			teamRed[i] = new Player();
+			view.add(teamRed[i].idField);
+			view.add(teamRed[i].nameField);
+			teamRed[i].idField.setBounds(100 + insets.left, 100 + insets.top + 25*i, teamRed[i].idSize.width, teamRed[i].idSize.height);
+			teamRed[i].nameField.setBounds(175 + insets.left, 100 + insets.top + 25*i, teamRed[i].nameSize.width, teamRed[i].nameSize.height);
+		}
+
+		Player teamGreen[] = new Player[20];
+		for(int i = 0; i < teamGreen.length; i++)
+		{
+			teamGreen[i] = new Player();
+			view.add(teamGreen[i].idField);
+			view.add(teamGreen[i].nameField);
+			teamGreen[i].idField.setBounds(500 + insets.left, 100 + insets.top + 25*i, teamGreen[i].idSize.width, teamGreen[i].idSize.height);
+			teamGreen[i].nameField.setBounds(575 + insets.left, 100 + insets.top + 25*i, teamGreen[i].nameSize.width, teamGreen[i].nameSize.height);
+		}
 	}
 
 	//MAIN PROGRAM:: the actual code that is ran on start
