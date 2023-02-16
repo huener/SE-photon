@@ -1,6 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\drake\\Downloads\\postgresql-42.5.4.jar"
+        ".vscode/postgresql-42.5.4.jar",
+        "postgresql-42.5.4.jar"
     ]
 }
