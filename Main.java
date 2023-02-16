@@ -72,11 +72,20 @@ public class Main extends JFrame
 			data.teamRed[i].idField.setBounds(150 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
 			data.teamRed[i].nameField.setBounds(225 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
 
+			//number labels
+			data.teamRed[i].playerNumText.setText("" + i);
+			data.teamRed[i].playerNumText.setBounds(130 + insets.left, 75 + insets.top + 25*i, 200, 20);
+			view.add(data.teamRed[i].playerNumText);
+
 			data.teamGreen[i] = new Player();
 			view.add(data.teamGreen[i].idField);
 			view.add(data.teamGreen[i].nameField);
 			data.teamGreen[i].idField.setBounds(550 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
 			data.teamGreen[i].nameField.setBounds(625 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
+			//number labels
+			data.teamGreen[i].playerNumText.setText("" + i);
+			data.teamGreen[i].playerNumText.setBounds(530 + insets.left, 75 + insets.top + 25*i, 200, 20);
+			view.add(data.teamGreen[i].playerNumText);
 		}
 
 		JTextArea redText = new JTextArea("RED TEAM");
