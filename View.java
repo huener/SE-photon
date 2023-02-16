@@ -9,14 +9,15 @@ import java.awt.Color;
 
 class View extends JPanel
 {
+	Data data;
 	BufferedImage splash_image;
    	int splashFrames = 0;
     boolean splash = false;
 
-    View(Controller c)
+    View(Controller c, Data d)
 	{
 		c.setView(this); 	//sets the controller's view to this view instance in order for the two to be able to communicate
-        
+        data = d;
         // loads the picture for the splash screen.
         splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
         // of the window matches best.

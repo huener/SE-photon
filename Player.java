@@ -6,34 +6,43 @@ class Player
 {
 	String codename;
 	int playerID;
-	
-	//text boxes associated with each player slot
-	JTextField idField = new JTextField(6);
-	JTextField nameField = new JTextField(15);
-	Dimension idSize = idField.getPreferredSize();
-	Dimension nameSize = nameField.getPreferredSize();
+	JTextField idField, nameField;
+	Dimension idSize, nameSize;
 
 	public Player(String codename, int playerID)
 	{
 		this.codename = codename;
 		this.playerID = playerID;
+		setTextFields();
 	}
 
 	public Player(String codename)
 	{
 		this.codename = codename;
 		this.playerID = -1;
+		setTextFields();
 	}
 
 	public Player(int playerID)
 	{
 		this.codename = "";
 		this.playerID = playerID;
+		setTextFields();
 	}
 
 	public Player()
 	{
 		this.codename = "";
 		this.playerID = -1;
+		setTextFields();
+	}
+
+	void setTextFields()
+	{
+		//set up text boxes associated with each player slot
+		idField = new JTextField(6);
+		nameField = new JTextField(15);
+		idSize = idField.getPreferredSize();
+		nameSize = nameField.getPreferredSize();
 	}
 }
