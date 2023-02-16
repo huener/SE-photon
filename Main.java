@@ -31,48 +31,70 @@ public class Main extends JFrame
 		
 		// passes listeners through the view and game in order to have controller do the controlling
 		this.addKeyListener(controller);
-        	splashScreen();	// draw splash screen and sleep before text boxes are created
+        splashScreen();	// draw splash screen and sleep before text boxes are created
 
-		// Create Players and Text Field Inputs
 		view.setLayout(null);
 		Insets insets = view.getInsets();
-
-		for(int i = 0; i < data.teamRed.length; i++)
-		{
-			data.teamRed[i] = new Player();
-			view.add(data.teamRed[i].idField);
-			view.add(data.teamRed[i].nameField);
-			data.teamRed[i].idField.setBounds(100 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
-			data.teamRed[i].nameField.setBounds(175 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
-		}
-
-		for(int i = 0; i < data.teamGreen.length; i++)
-		{
-			data.teamGreen[i] = new Player();
-			view.add(data.teamGreen[i].idField);
-			view.add(data.teamGreen[i].nameField);
-			data.teamGreen[i].idField.setBounds(500 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
-			data.teamGreen[i].nameField.setBounds(575 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
-		}
-
-        	createNavigationBar(insets);
-        	createBottomText(insets);        
+	
+		createNavigationBar(insets);
+        createBottomText(insets);   
+		
+		createPlayerEntryScreen(insets);
 	}
 
-    	void splashScreen() {
-        	view.repaint();
+    void splashScreen()
+	{
+        view.repaint();
         
-        	// let splash screen display for 3 seconds
-        	if(view.splash == false) {
-            		try
-            		{
-                		TimeUnit.SECONDS.sleep(3);
-            		} catch(Exception e) {
+        // let splash screen display for 3 seconds
+        if(view.splash == false)
+		{
+            try
+            {
+                TimeUnit.SECONDS.sleep(3);
+            } catch(Exception e) 
+			{
 				e.printStackTrace();
 				System.exit(1);
 			}
 			view.splash = true; // toggle splash variable so splash screen stops showing
 		}
+	}
+	
+	//function call to create the PES
+	void createPlayerEntryScreen(Insets insets)
+	{
+		for(int i = 0; i < data.teamRed.length; i++)
+		{
+			data.teamRed[i] = new Player();
+			view.add(data.teamRed[i].idField);
+			view.add(data.teamRed[i].nameField);
+			data.teamRed[i].idField.setBounds(150 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
+			data.teamRed[i].nameField.setBounds(225 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
+
+			data.teamGreen[i] = new Player();
+			view.add(data.teamGreen[i].idField);
+			view.add(data.teamGreen[i].nameField);
+			data.teamGreen[i].idField.setBounds(550 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
+			data.teamGreen[i].nameField.setBounds(625 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
+		}
+
+		JTextArea redText = new JTextArea("RED TEAM");
+		redText.setForeground(Color.RED);
+		redText.setBackground(Color.BLACK);
+		redText.setBounds(insets.left + 220, insets.top + 40, 200, 20);
+		redText.setEditable(false);
+		redText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+		view.add(redText);
+
+		JTextArea greenText = new JTextArea("GREEN TEAM");
+		greenText.setForeground(Color.GREEN);
+		greenText.setBackground(Color.BLACK);
+		greenText.setBounds(insets.left + 610, insets.top + 40, 200, 20);
+		greenText.setEditable(false);
+		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+		view.add(greenText);
+
 	}
 	
 	void createNavigationBar(Insets insets1) {
