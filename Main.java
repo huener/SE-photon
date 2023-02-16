@@ -31,7 +31,7 @@ public class Main extends JFrame
 		
 		// passes listeners through the view and game in order to have controller do the controlling
 		this.addKeyListener(controller);
-        splashScreen();	// draw splash screen and sleep before text boxes are created
+        	splashScreen();	// draw splash screen and sleep before text boxes are created
 
 		// Create Players and Text Field Inputs
 		view.setLayout(null);
