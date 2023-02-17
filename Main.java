@@ -15,9 +15,11 @@ public class Main extends JFrame
 	Data data = new Data();
 	Controller controller = new Controller(data);
 	View view = new View(controller, data);
+	
 
 	public Main()
 	{
+		
 		// JFrame window customization
 		this.setTitle("Photon Laser Tag Simulation (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧");
 		this.setSize(960, 720);
@@ -38,6 +40,8 @@ public class Main extends JFrame
         view.createBottomText(insets);   
 		
 		createPlayerEntryScreen(insets);
+		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
+		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
 	}
 
     void splashScreen()
@@ -58,7 +62,7 @@ public class Main extends JFrame
 			view.splash = true; // toggle splash variable so splash screen stops showing
 		}
 	}
-	
+
 	//function call to create the PES
 	void createPlayerEntryScreen(Insets insets)
 	{
