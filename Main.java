@@ -1,15 +1,13 @@
 // Will run the program and initialize classes
 
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import javax.swing.JTextArea;
-import javax.swing.border.Border; 
-import javax.swing.BorderFactory;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Insets;
 import java.awt.Color;
 import java.util.concurrent.TimeUnit;
+
 
 public class Main extends JFrame
 {
@@ -36,8 +34,8 @@ public class Main extends JFrame
 		view.setLayout(null);
 		Insets insets = view.getInsets();
 	
-		createNavigationBar(insets);
-        createBottomText(insets);   
+		view.createNavigationBar(insets);
+        view.createBottomText(insets);   
 		
 		createPlayerEntryScreen(insets);
 	}
@@ -71,10 +69,13 @@ public class Main extends JFrame
 			view.add(data.teamRed[i].nameField);
 			data.teamRed[i].idField.setBounds(150 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
 			data.teamRed[i].nameField.setBounds(225 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
+			data.teamRed[i].idField.addKeyListener(controller);
+			data.teamRed[i].nameField.addKeyListener(controller);
 
 			//number labels
 			data.teamRed[i].playerNumText.setText("" + i);
 			data.teamRed[i].playerNumText.setBounds(130 + insets.left, 75 + insets.top + 25*i, 200, 20);
+			data.teamRed[i].playerNumText.setFocusable(false);
 			view.add(data.teamRed[i].playerNumText);
 
 			data.teamGreen[i] = new Player();
@@ -82,9 +83,13 @@ public class Main extends JFrame
 			view.add(data.teamGreen[i].nameField);
 			data.teamGreen[i].idField.setBounds(550 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
 			data.teamGreen[i].nameField.setBounds(625 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
+			data.teamGreen[i].idField.addKeyListener(controller);
+			data.teamGreen[i].nameField.addKeyListener(controller);
+
 			//number labels
 			data.teamGreen[i].playerNumText.setText("" + i);
 			data.teamGreen[i].playerNumText.setBounds(530 + insets.left, 75 + insets.top + 25*i, 200, 20);
+			data.teamGreen[i].playerNumText.setFocusable(false);
 			view.add(data.teamGreen[i].playerNumText);
 		}
 
@@ -105,55 +110,6 @@ public class Main extends JFrame
 		view.add(greenText);
 
 	}
-	
-	void createNavigationBar(Insets insets1) {
-		// create navigation bar / instructions
-		Border border = BorderFactory.createLineBorder(Color.WHITE);
-		// create array of JTextArea
-		JTextArea navBar[] = new JTextArea[12];
-		for(int i = 0; i < navBar.length; i++)
-		{
-			navBar[i] = new JTextArea();
-			navBar[i].setEditable(false);
-			navBar[i].setForeground(Color.GREEN);
-			navBar[i].setBackground(Color.BLACK);
-
-			// space them out evenly horizontally; same height on the screen
-			navBar[i].setBounds(insets1.left + (i*78), insets1.top + 590, 78, 60);
-
-			// only add border to the JTextAreas for the controls. No borders for empty areas.
-			if(i != 3 && i != 5 && i != 8 && i != 10) {
-				navBar[i].setBorder(BorderFactory.createCompoundBorder(border,
-					BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-			}
-            
-			// add to view (so they show up)
-			view.add(navBar[i]);
-		}
-		// set unique text for the necessary text areas.
-		// JTextArea apparently doesn't have a good way to center text,
-		// so strings are formatted to be centered in the textbox
-		navBar[0].setText("         F1 \n        Edit \n      Game");
-		navBar[1].setText("         F2 \n      Game \n  Parameters");
-		navBar[2].setText("         F3 \n       Start \n      Game");
-		navBar[4].setText("         F5 \n  PreEntered \n     Games");
-		navBar[6].setText("         F7");
-		navBar[7].setText("         F8 \n       View \n      Game");
-		navBar[9].setText("        F10 \n       Flick \n       Sync");
-		navBar[11].setText("        F12 \n       Clear \n      Game");
-	}
-
-	void createBottomText(Insets insets1) {
-		// create bottom textbox
-		// editmode specific text?
-		JTextField bottomText = new JTextField(50);
-		bottomText.setBounds(insets1.left, insets1.top + 650, 940, 32);
-		bottomText.setEditable(false);
-		bottomText.setHorizontalAlignment(JTextField.CENTER);
-		bottomText.setText("<Del> to Delete Player, <Ins> to Manually Insert, or edit codename");
-		bottomText.setFont(new java.awt.Font("Arial", Font.BOLD, 12));
-		view.add(bottomText);
-	}
 
 	//MAIN PROGRAM:: the actual code that is ran on start
 	public static void main(String[] args)
@@ -168,6 +124,7 @@ public class Main extends JFrame
 		while(true)
 		{
 			controller.update();
+			view.revalidate();
 			view.repaint(); // Indirectly calls View.paintComponent
 			Toolkit.getDefaultToolkit().sync(); // Updates screen
 
