@@ -58,6 +58,9 @@ class Controller implements ActionListener, KeyListener
 			case KeyEvent.VK_F10:	break; // TODO: Flick Sync
 			case KeyEvent.VK_F12:	break; // TODO: clear game text fields
 
+			case KeyEvent.VK_TAB:
+			case KeyEvent.VK_ENTER:	break; // TODO: tab and enter both need to cause the player object to update variables & querey database
+
 		}
 	}
 
@@ -71,8 +74,8 @@ class Controller implements ActionListener, KeyListener
 		{
 			// enable editing the text fields
 			editTextFields(true);
-			
 			// arrow key behavior
+
 		}
 		else
 		{
