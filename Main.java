@@ -68,27 +68,36 @@ public class Main extends JFrame
 	{
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
-			data.teamRed[i] = new Player();
+			data.teamRed[i] = new Player("R" + i);
+
 			view.add(data.teamRed[i].idField);
 			view.add(data.teamRed[i].nameField);
+
 			data.teamRed[i].idField.setBounds(150 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
 			data.teamRed[i].nameField.setBounds(225 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
 			data.teamRed[i].idField.addKeyListener(controller);
 			data.teamRed[i].nameField.addKeyListener(controller);
+			data.teamRed[i].idField.addFocusListener(controller);
+			data.teamRed[i].nameField.addFocusListener(controller);
 
 			//number labels
 			data.teamRed[i].playerNumText.setText("" + i);
 			data.teamRed[i].playerNumText.setBounds(130 + insets.left, 75 + insets.top + 25*i, 200, 20);
 			data.teamRed[i].playerNumText.setFocusable(false);
 			view.add(data.teamRed[i].playerNumText);
+		}
 
-			data.teamGreen[i] = new Player();
+		for(int i = 0; i < data.teamGreen.length; i++)
+		{
+			data.teamGreen[i] = new Player("G" + i);
 			view.add(data.teamGreen[i].idField);
 			view.add(data.teamGreen[i].nameField);
 			data.teamGreen[i].idField.setBounds(550 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
 			data.teamGreen[i].nameField.setBounds(625 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
 			data.teamGreen[i].idField.addKeyListener(controller);
 			data.teamGreen[i].nameField.addKeyListener(controller);
+			data.teamGreen[i].idField.addFocusListener(controller);
+			data.teamGreen[i].nameField.addFocusListener(controller);
 
 			//number labels
 			data.teamGreen[i].playerNumText.setText("" + i);
@@ -113,6 +122,9 @@ public class Main extends JFrame
 		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
 		view.add(greenText);
 
+		// this sets the very first focus tab always has somewhere to go
+		data.teamRed[0].idField.requestFocusInWindow();
+		data.teamRed[0].idField.setFocusCycleRoot(true);
 	}
 
 	//MAIN PROGRAM:: the actual code that is ran on start
