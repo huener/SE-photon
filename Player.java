@@ -9,35 +9,40 @@ class Player
 {
 	String codename;
 	int playerID;
+	String tableIndex;
 	JTextField idField, nameField;
 	Dimension idSize, nameSize;
 	JTextArea playerNumText;
 
-	public Player(String codename, int playerID)
+	public Player(String codename, int playerID, String tableIndex)
 	{
 		this.codename = codename;
 		this.playerID = playerID;
+		this.tableIndex = tableIndex;
 		setTextFields();
 	}
 
-	public Player(String codename)
+	public Player(String codename, String tableIndex)
 	{
 		this.codename = codename;
 		this.playerID = -1;
+		this.tableIndex = tableIndex;
 		setTextFields();
 	}
 
-	public Player(int playerID)
+	public Player(int playerID, String tableIndex)
 	{
 		this.codename = "";
 		this.playerID = playerID;
+		this.tableIndex = tableIndex;
 		setTextFields();
 	}
 
-	public Player()
+	public Player(String tableIndex)
 	{
 		this.codename = "";
 		this.playerID = -1;
+		this.tableIndex = tableIndex;
 		setTextFields();
 	}
 
@@ -46,6 +51,9 @@ class Player
 		//set up text boxes associated with each player slot
 		idField = new JTextField(6);
 		nameField = new JTextField(15);
+		idField.setName('I' + tableIndex);
+		nameField.setName('N' + tableIndex);
+
 		playerNumText = new JTextArea();
 		playerNumText.setForeground(Color.WHITE);
 		playerNumText.setBackground(Color.BLACK);
@@ -55,4 +63,6 @@ class Player
 		idSize = idField.getPreferredSize();
 		nameSize = nameField.getPreferredSize();
 	}
+
+
 }
