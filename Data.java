@@ -69,5 +69,14 @@ public final class Data
             return "COULD NOT FIND ID";
         }
     }
-
+    //clears database
+    //USE WITH CAUTION, IT DOES ACTUALLY WORK
+    static void clearDatabase()
+    {
+        try{
+            st.executeUpdate("Delete from \"Players\"");
+        }catch(Exception SQLException){
+            System.out.println("ERROR : COULD NOT ESTABLISH CONNECTION TO DATABASE");
+        }
+    }
 }
