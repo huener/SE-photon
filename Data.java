@@ -14,7 +14,7 @@ public final class Data
             con = DriverManager.getConnection(url, username, password);
             st = con.createStatement();
         }catch(Exception SQLException){
-            System.out.println("SQL");
+            System.out.println("ERROR : COULD NOT ESTABLISH CONNECTION TO DATABASE");
         }   
     }
     //inserts a player with the passed in values
@@ -23,7 +23,27 @@ public final class Data
         try{
             st.executeUpdate("insert into \"Players\" (id, codename) VALUES (" + id + ",'" + codeName + "')");
         }catch(Exception SQLException){
-            System.out.println("SQL");
+            System.out.println("ERROR : ID ALREADY UTILIZED");
+        }
+    }
+    //checks to see if an id is present in the database
+    static boolean checkForID(int id)
+    {
+        try{
+            //saves id column to a Result Set
+            ResultSet rs =  st.executeQuery("SELECT \"id\" from \"Players\" WHERE \"id\" = " + id);
+            //if there is a value in the result set, return true, else, return false
+            if(rs.next())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }catch(Exception SQLException){
+            System.out.println("ERROR : COULD NOT ESTABLISH CONNECTION TO DATABASE");
+            return false;
         }
     }
 }
