@@ -46,4 +46,28 @@ public final class Data
             return false;
         }
     }
+    //returns player codename given an id
+    //pleaaaaase don't call this function without first checking for id
+    static String getCodeName(int id)
+    {
+        try{
+            //creates ResultSet of all codenames where ID
+            ResultSet rs = st.executeQuery("SELECT \"codename\" from \"Players\" WHERE \"id\" = " + id);
+            if(rs.next())
+            {
+                //returns codename 
+                return rs.getString("codename");
+            }
+            else
+            {
+                //returns that the id could not be found
+                return "COULD NOT FIND ID";
+            }
+        }catch(Exception SQLException){
+            //returns that the ID could not be found, 
+            System.out.println("ERROR : COULD NOT ESTABLISH CONNECTION TO DATABASE");
+            return "COULD NOT FIND ID";
+        }
+    }
+
 }
