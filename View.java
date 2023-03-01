@@ -3,6 +3,7 @@
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import javax.swing.BoxLayout;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
@@ -12,13 +13,23 @@ import java.awt.Font;
 import javax.swing.border.Border; 
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
+import java.awt.Dimension;
 
 class View extends JPanel
 {
 	Data data;
+
+	//Splash Screen
 	BufferedImage splash_image;
    	int splashFrames = 0;
     boolean splash = false;
+
+	//Panels Framework
+	JPanel titlePanel;
+	JPanel mainPanel;
+	JPanel navPanel;
+	JPanel bottomPanel;
+
 	JTextField bottomText;
 
     View(Controller c, Data d)
@@ -26,6 +37,12 @@ class View extends JPanel
 		c.setView(this); 	//sets the controller's view to this view instance in order for the two to be able to communicate
         data = d;
 		bottomText = new JTextField(50);
+		//initiating and sizing panels
+		titlePanel = new JPanel(); titlePanel.setMaximumSize(new Dimension(960, 50)); titlePanel.setBackground(Color.black);
+		mainPanel = new JPanel(); mainPanel.setMaximumSize(new Dimension(960, 580)); mainPanel.setBackground(Color.black);
+		navPanel = new JPanel(); navPanel.setMaximumSize(new Dimension(960, 60)); navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS)); navPanel.setBackground(Color.black);
+		bottomPanel = new JPanel(); bottomPanel.setMaximumSize(new Dimension(960, 30));
+
         // loads the picture for the splash screen.
         splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
         // of the window matches best.
@@ -45,7 +62,18 @@ class View extends JPanel
 		
 	}
 
-	void createNavigationBar(Insets insets1) {
+	void startGUI()
+	{
+		this.add(titlePanel);
+        this.add(mainPanel);
+        this.add(navPanel);
+        this.add(bottomPanel);
+
+		createNavigationBar();
+		createBottomText();
+	}
+
+	void createNavigationBar() {
 		// create navigation bar / instructions
 		Border border = BorderFactory.createLineBorder(Color.WHITE);
 		// create array of JTextArea
@@ -58,7 +86,7 @@ class View extends JPanel
 			navBar[i].setBackground(Color.BLACK);
 
 			// space them out evenly horizontally; same height on the screen
-			navBar[i].setBounds(insets1.left + (i*78), insets1.top + 590, 78, 60);
+			navBar[i].setMaximumSize(new Dimension(78, 60));
 
 			// only add border to the JTextAreas for the controls. No borders for empty areas.
 			if(i != 3 && i != 5 && i != 8 && i != 10) {
@@ -67,7 +95,7 @@ class View extends JPanel
 			}
             
 			// add to view (so they show up)
-			this.add(navBar[i]);
+			this.navPanel.add(navBar[i]);
 		}
 		// set unique text for the necessary text areas.
 		// JTextArea apparently doesn't have a good way to center text,
@@ -82,16 +110,15 @@ class View extends JPanel
 		navBar[11].setText("        F12 \n       Clear \n      Game");
 	}
 
-	void createBottomText(Insets insets1) {
+	void createBottomText() {
 		// create bottom textbox
 		// editmode specific text?
-		JTextField bottomText = new JTextField(50);
-		bottomText.setBounds(insets1.left, insets1.top + 650, 940, 32);
+		JTextField bottomText = new JTextField(100);
 		bottomText.setEditable(false);
 		bottomText.setHorizontalAlignment(JTextField.CENTER);
 		bottomText.setText("<Del> to Delete Player, <Ins> to Manually Insert, or edit codename");
 		bottomText.setFont(new java.awt.Font("Arial", Font.BOLD, 12));
-		this.add(bottomText);
+		this.bottomPanel.add(bottomText);
 	}
 
 	//static method to load an image with a string input of its name

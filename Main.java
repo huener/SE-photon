@@ -2,11 +2,14 @@
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.BoxLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Insets;
 import java.awt.Color;
 import java.util.concurrent.TimeUnit;
+
+
 
 
 public class Main extends JFrame
@@ -33,13 +36,13 @@ public class Main extends JFrame
 		this.addKeyListener(controller);
         splashScreen();	// draw splash screen and sleep before text boxes are created
 
-		view.setLayout(null);
+		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
 		Insets insets = view.getInsets();
-	
-		view.createNavigationBar(insets);
-        view.createBottomText(insets);   
 		
-		createPlayerEntryScreen(insets);
+		view.startGUI();
+		
+		//createPlayerEntryScreen(insets); NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
+		createPlayerActionScreen(insets);
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
 	}
@@ -125,6 +128,12 @@ public class Main extends JFrame
 		// this sets the very first focus tab always has somewhere to go
 		data.teamRed[0].idField.requestFocusInWindow();
 		data.teamRed[0].idField.setFocusCycleRoot(true);
+	}
+
+	//function call to create the PAS, just has the basic framework for now
+	void createPlayerActionScreen(Insets insets)
+	{
+		
 	}
 
 	//MAIN PROGRAM:: the actual code that is ran on start
