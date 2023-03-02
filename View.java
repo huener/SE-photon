@@ -30,6 +30,10 @@ class View extends JPanel
 	JPanel navPanel;
 	JPanel bottomPanel;
 
+	//Switchable panles
+	JPanel entryPanel;
+	JPanel actionPanel;
+
 	JTextField bottomText;
 
     View(Controller c, Data d)
@@ -39,9 +43,12 @@ class View extends JPanel
 		bottomText = new JTextField(50);
 		//initiating and sizing panels
 		titlePanel = new JPanel(); titlePanel.setMaximumSize(new Dimension(960, 50)); titlePanel.setBackground(Color.black);
-		mainPanel = new JPanel(); mainPanel.setMaximumSize(new Dimension(960, 580)); mainPanel.setBackground(Color.black);
+		mainPanel = new JPanel(); mainPanel.setMaximumSize(new Dimension(960, 580)); mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS)); mainPanel.setBackground(Color.black);
 		navPanel = new JPanel(); navPanel.setMaximumSize(new Dimension(960, 60)); navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS)); navPanel.setBackground(Color.black);
 		bottomPanel = new JPanel(); bottomPanel.setMaximumSize(new Dimension(960, 30));
+
+		entryPanel = new JPanel(); entryPanel.setSize(new Dimension(960, 580)); entryPanel.setBackground(Color.black);
+		actionPanel = new JPanel(); actionPanel.setBackground(Color.white); actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 
         // loads the picture for the splash screen.
         splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
@@ -121,6 +128,81 @@ class View extends JPanel
 		this.bottomPanel.add(bottomText);
 	}
 
+	//function call to create the PES
+	void createPlayerEntryScreen(Controller controller)
+	{
+		for(int i = 0; i < data.teamRed.length; i++)
+		{
+			data.teamRed[i] = new Player("R" + i);
+
+			entryPanel.add(data.teamRed[i].idField);
+			entryPanel.add(data.teamRed[i].nameField);
+
+			data.teamRed[i].idField.setBounds(150 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
+			data.teamRed[i].nameField.setBounds(225 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
+			data.teamRed[i].idField.addKeyListener(controller);
+			data.teamRed[i].nameField.addKeyListener(controller);
+			data.teamRed[i].idField.addFocusListener(controller);
+			data.teamRed[i].nameField.addFocusListener(controller);
+
+			//number labels
+			data.teamRed[i].playerNumText.setText("" + i);
+			data.teamRed[i].playerNumText.setBounds(130 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, 200, 20);
+			data.teamRed[i].playerNumText.setFocusable(false);
+			entryPanel.add(data.teamRed[i].playerNumText);
+		}
+
+		for(int i = 0; i < data.teamGreen.length; i++)
+		{
+			data.teamGreen[i] = new Player("G" + i);
+			entryPanel.add(data.teamGreen[i].idField);
+			entryPanel.add(data.teamGreen[i].nameField);
+			data.teamGreen[i].idField.setBounds(550 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
+			data.teamGreen[i].nameField.setBounds(625 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
+			data.teamGreen[i].idField.addKeyListener(controller);
+			data.teamGreen[i].nameField.addKeyListener(controller);
+			data.teamGreen[i].idField.addFocusListener(controller);
+			data.teamGreen[i].nameField.addFocusListener(controller);
+
+			//number labels
+			data.teamGreen[i].playerNumText.setText("" + i);
+			data.teamGreen[i].playerNumText.setBounds(530 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, 200, 20);
+			data.teamGreen[i].playerNumText.setFocusable(false);
+			entryPanel.add(data.teamGreen[i].playerNumText);
+		}
+
+		JTextArea redText = new JTextArea("RED TEAM");
+		redText.setForeground(Color.RED);
+		redText.setBackground(Color.BLACK);
+		redText.setBounds(entryPanel.getInsets().left + 220, entryPanel.getInsets().top + 40, 200, 20);
+		redText.setEditable(false);
+		redText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+		entryPanel.add(redText);
+
+		JTextArea greenText = new JTextArea("GREEN TEAM");
+		greenText.setForeground(Color.GREEN);
+		greenText.setBackground(Color.BLACK);
+		greenText.setBounds(entryPanel.getInsets().left + 610, entryPanel.getInsets().top + 40, 200, 20);
+		greenText.setEditable(false);
+		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+		entryPanel.add(greenText);
+
+		// this sets the very first focus tab always has somewhere to go
+		data.teamRed[0].idField.requestFocusInWindow();
+		data.teamRed[0].idField.setFocusCycleRoot(true);
+	}
+
+
+	//function to create action screen, will only create it once but pull it up each time we switch
+	void createPlayerActionScreen(Controller controller)
+	{
+		JPanel topActionPanel = new JPanel(); topActionPanel.setMaximumSize(new Dimension(960, 240));//list of players per team
+		JPanel botActionPanel = new JPanel(); botActionPanel.setMaximumSize(new Dimension(960, 300));//game action feed
+		JPanel timeActionPanel = new JPanel(); timeActionPanel.setMaximumSize(new Dimension(960, 40)); //game timer
+		this.actionPanel.add(topActionPanel); this.actionPanel.add(botActionPanel); this.actionPanel.add(timeActionPanel);
+		topActionPanel.setBackground(Color.red);
+		timeActionPanel.setBackground(Color.red);
+	}
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{

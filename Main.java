@@ -37,12 +37,14 @@ public class Main extends JFrame
         splashScreen();	// draw splash screen and sleep before text boxes are created
 
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
-		Insets insets = view.getInsets();
 		
 		view.startGUI();
 		
-		//createPlayerEntryScreen(insets); NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
-		createPlayerActionScreen(insets);
+		//view.createPlayerEntryScreen(controller); //NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
+		//view.mainPanel.add(view.entryPanel);
+
+		view.createPlayerActionScreen(controller);
+		view.mainPanel.add(view.actionPanel);
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
 	}
@@ -64,76 +66,6 @@ public class Main extends JFrame
 			}
 			view.splash = true; // toggle splash variable so splash screen stops showing
 		}
-	}
-
-	//function call to create the PES
-	void createPlayerEntryScreen(Insets insets)
-	{
-		for(int i = 0; i < data.teamRed.length; i++)
-		{
-			data.teamRed[i] = new Player("R" + i);
-
-			view.add(data.teamRed[i].idField);
-			view.add(data.teamRed[i].nameField);
-
-			data.teamRed[i].idField.setBounds(150 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
-			data.teamRed[i].nameField.setBounds(225 + insets.left, 75 + insets.top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
-			data.teamRed[i].idField.addKeyListener(controller);
-			data.teamRed[i].nameField.addKeyListener(controller);
-			data.teamRed[i].idField.addFocusListener(controller);
-			data.teamRed[i].nameField.addFocusListener(controller);
-
-			//number labels
-			data.teamRed[i].playerNumText.setText("" + i);
-			data.teamRed[i].playerNumText.setBounds(130 + insets.left, 75 + insets.top + 25*i, 200, 20);
-			data.teamRed[i].playerNumText.setFocusable(false);
-			view.add(data.teamRed[i].playerNumText);
-		}
-
-		for(int i = 0; i < data.teamGreen.length; i++)
-		{
-			data.teamGreen[i] = new Player("G" + i);
-			view.add(data.teamGreen[i].idField);
-			view.add(data.teamGreen[i].nameField);
-			data.teamGreen[i].idField.setBounds(550 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
-			data.teamGreen[i].nameField.setBounds(625 + insets.left, 75 + insets.top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
-			data.teamGreen[i].idField.addKeyListener(controller);
-			data.teamGreen[i].nameField.addKeyListener(controller);
-			data.teamGreen[i].idField.addFocusListener(controller);
-			data.teamGreen[i].nameField.addFocusListener(controller);
-
-			//number labels
-			data.teamGreen[i].playerNumText.setText("" + i);
-			data.teamGreen[i].playerNumText.setBounds(530 + insets.left, 75 + insets.top + 25*i, 200, 20);
-			data.teamGreen[i].playerNumText.setFocusable(false);
-			view.add(data.teamGreen[i].playerNumText);
-		}
-
-		JTextArea redText = new JTextArea("RED TEAM");
-		redText.setForeground(Color.RED);
-		redText.setBackground(Color.BLACK);
-		redText.setBounds(insets.left + 220, insets.top + 40, 200, 20);
-		redText.setEditable(false);
-		redText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
-		view.add(redText);
-
-		JTextArea greenText = new JTextArea("GREEN TEAM");
-		greenText.setForeground(Color.GREEN);
-		greenText.setBackground(Color.BLACK);
-		greenText.setBounds(insets.left + 610, insets.top + 40, 200, 20);
-		greenText.setEditable(false);
-		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
-		view.add(greenText);
-
-		// this sets the very first focus tab always has somewhere to go
-		data.teamRed[0].idField.requestFocusInWindow();
-		data.teamRed[0].idField.setFocusCycleRoot(true);
-	}
-
-	//function call to create the PAS, just has the basic framework for now
-	void createPlayerActionScreen(Insets insets)
-	{
-		
 	}
 
 	//MAIN PROGRAM:: the actual code that is ran on start
