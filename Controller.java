@@ -18,7 +18,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 	// Mode selectors
 	boolean editMode;
-	boolean actionMode; //switches to the player action screen
+	boolean entryMode = true; //switches to the player action screen
 	Player focus, prevFocus;
 
 
@@ -49,7 +49,18 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 			case KeyEvent.VK_F1:	editMode = !editMode; break;
 			case KeyEvent.VK_F3:	break; // TODO: start game
-			case KeyEvent.VK_F5:	actionMode = !actionMode; // TODO: PreEntered Games
+			case KeyEvent.VK_F5:	
+				entryMode = !entryMode; // TODO: PreEntered Games
+				if(entryMode) 
+				{
+					view.mainPanel.remove(view.actionPanel);
+					view.mainPanel.add(view.entryPanel); 
+				}
+				else
+				{
+					view.mainPanel.remove(view.entryPanel);
+					view.mainPanel.add(view.actionPanel); 
+				}
 			case KeyEvent.VK_F8:	break; // TODO: View Game
 			case KeyEvent.VK_F10:	break; // TODO: Flick Sync
 			case KeyEvent.VK_F12:	break; // TODO: clear game text fields
