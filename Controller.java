@@ -25,7 +25,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	public Controller(Data data)
 	{
 		this.data = data;
-		editMode = false;
+		editMode = true;
 		focus = data.teamRed[0];
 		prevFocus = focus;
 	}
