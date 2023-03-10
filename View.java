@@ -14,6 +14,7 @@ import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
+import java.awt.ComponentOrientation;
 
 class View extends JPanel
 {
@@ -22,24 +23,42 @@ class View extends JPanel
 	//Splash Screen
 	BufferedImage splash_image;
    	int splashFrames = 0;
-    boolean splash = false;
+    	boolean splash = false;
 
 	//Panels Framework
 	JPanel titlePanel;
 	JPanel mainPanel;
 	JPanel navPanel;
 	JPanel bottomPanel;
+	
+	JPanel topActionPanel;
+   	JPanel botActionPanel;
+    	JPanel timeActionPanel;
+
+    	JPanel playerInfoPanel;
+    	JPanel teamNamePanel;
+    	JPanel actionPlayerColumns[] = new JPanel[4];
 
 	//Switchable panles
 	JPanel entryPanel;
 	JPanel actionPanel;
 
 	JTextField bottomText;
+	
+	JTextArea redPlayerNames[] = new JTextArea[6];
+    	JTextArea redPlayerScores[] = new JTextArea[6];
+    	JTextArea greenPlayerNames[] = new JTextArea[6];
+    	JTextArea greenPlayerScores[] = new JTextArea[6];
+	
+	// total team scores
+    	// temp??
+    	int redTotal = 0;
+    	int greenTotal = 0;
 
-    View(Controller c, Data d)
+    	View(Controller c, Data d)
 	{
 		c.setView(this); 	//sets the controller's view to this view instance in order for the two to be able to communicate
-        data = d;
+        	data = d;
 		bottomText = new JTextField(50);
 		//initiating and sizing panels
 		titlePanel = new JPanel(); titlePanel.setMaximumSize(new Dimension(960, 50)); titlePanel.setBackground(Color.black);
@@ -50,11 +69,11 @@ class View extends JPanel
 		entryPanel = new JPanel(); entryPanel.setSize(new Dimension(960, 580)); entryPanel.setBackground(Color.black);
 		actionPanel = new JPanel(); actionPanel.setBackground(Color.white); actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 
-        // loads the picture for the splash screen.
-        splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
-        // of the window matches best.
+        	// loads the picture for the splash screen.
+        	splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
+        	// of the window matches best.
 	}
-    // window size is set to 960 x 720 in main
+    	// window size is set to 960 x 720 in main
 
 	public void paintComponent(Graphics g)
 	{
@@ -63,8 +82,8 @@ class View extends JPanel
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
         
         	if(splash == false) {
-            	g.drawImage(splash_image, 0, 0, null);
-            	//splash = true;
+            		g.drawImage(splash_image, 0, 0, null);
+            		//splash = true;
         	}
 		
 	}
@@ -72,9 +91,9 @@ class View extends JPanel
 	void startGUI()
 	{
 		this.add(titlePanel);
-        this.add(mainPanel);
-        this.add(navPanel);
-        this.add(bottomPanel);
+        	this.add(mainPanel);
+        	this.add(navPanel);
+        	this.add(bottomPanel);
 
 		createNavigationBar();
 		createBottomText();
@@ -200,9 +219,232 @@ class View extends JPanel
 		JPanel botActionPanel = new JPanel(); botActionPanel.setMaximumSize(new Dimension(960, 300));//game action feed
 		JPanel timeActionPanel = new JPanel(); timeActionPanel.setMaximumSize(new Dimension(960, 40)); //game timer
 		this.actionPanel.add(topActionPanel); this.actionPanel.add(botActionPanel); this.actionPanel.add(timeActionPanel);
-		topActionPanel.setBackground(Color.red);
+		topActionPanel.setBackground(Color.black); // changed from red to black to match example video
 		timeActionPanel.setBackground(Color.red);
+		
+		// contains teamNamePanel and playerInfoPanel, y-axis layout so teamName is above playerInfo
+        	topActionPanel.setLayout(new BoxLayout(topActionPanel, BoxLayout.Y_AXIS));
+
+        	createTopActionPanel();
 	}
+	
+	// --------------------------------------------------------------------------
+    	// sets up some panels for the topActionPanel
+    	// --------------------------------------------------------------------------
+    	void createTopActionPanel() {
+
+        	teamNamePanel = new JPanel();
+        	teamNamePanel.setBackground(Color.black);
+        	teamNamePanel.setMaximumSize(new Dimension(900, 40));
+
+        	// holds panels (columns) for player info, x-axis so columns are next to each other
+        	playerInfoPanel = new JPanel();
+        	playerInfoPanel.setBackground(Color.black);
+        	playerInfoPanel.setMaximumSize(new Dimension(900, 200));
+        	playerInfoPanel.setLayout(new BoxLayout(playerInfoPanel, BoxLayout.X_AXIS));
+
+        	// one panel for each column
+        	// 0 is redPlayerNames, 1 is redPlayerScores, 2 is greenPlayerNames, 3 is greenPlayerScores
+        	for(int i = 0; i < actionPlayerColumns.length; i++) {
+            		actionPlayerColumns[i] = new JPanel();
+            		actionPlayerColumns[i].setMaximumSize(new Dimension(225, 200));
+            		actionPlayerColumns[i].setLayout(new BoxLayout(actionPlayerColumns[i], BoxLayout.Y_AXIS));
+            		actionPlayerColumns[i].setBackground(Color.black);
+        	}
+
+
+        	// spacing textboxes make the high score columns look more centered
+        	// and creates some separation between the red team and green team information
+        	JTextArea spacing1 = new JTextArea();
+        	spacing1.setMaximumSize(new Dimension(50, 200));
+        	spacing1.setBackground(Color.black);
+        	spacing1.setText("                          ");
+        	playerInfoPanel.add(spacing1);
+
+        	this.playerInfoPanel.add(actionPlayerColumns[0]); 
+        	this.playerInfoPanel.add(actionPlayerColumns[1]); 
+
+        	JTextArea spacing2 = new JTextArea();
+        	spacing2.setMaximumSize(new Dimension(70, 200));
+        	spacing2.setBackground(Color.black);
+        	playerInfoPanel.add(spacing2);
+
+        	this.playerInfoPanel.add(actionPlayerColumns[2]); 
+        	this.playerInfoPanel.add(actionPlayerColumns[3]); 
+
+        	JTextArea spacing3 = new JTextArea();
+        	spacing3.setMaximumSize(new Dimension(30, 200));
+        	spacing3.setBackground(Color.black);
+        	playerInfoPanel.add(spacing3);
+
+        	this.topActionPanel.add(teamNamePanel); 
+        	this.topActionPanel.add(playerInfoPanel); 
+
+        	// create rest of upper action screen
+        	createTeamNamePanel();
+        	createActionRedTeam();
+        	createActionGreenTeam();
+    	}
+
+    	// set up the panel that contains the team names
+    	void createTeamNamePanel() {
+        	// create textboxes for team names
+        	JTextArea teamnames[] = new JTextArea[3];
+        	for(int i = 0; i < 3; i++) {
+            		teamnames[i] = new JTextArea();
+            		teamnames[i].setSize(new Dimension(300, 40));
+		    	teamnames[i].setBackground(Color.BLACK);
+		    	teamnames[i].setEditable(false);
+		    	teamnames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+        	}
+        	// set text color
+        	teamnames[0].setForeground(Color.RED);
+        	teamnames[2].setForeground(Color.GREEN);
+        	// set text
+        	teamnames[0].setText("RED TEAM");
+        	// textbox for spacing
+        	teamnames[1].setText("                                                     ");
+        	teamnames[2].setText("GREEN TEAM");
+        	// add to panel
+        	this.teamNamePanel.add(teamnames[0]); 
+        	this.teamNamePanel.add(teamnames[1]); 
+        	this.teamNamePanel.add(teamnames[2]); 
+    	}
+
+    	// make text areas for red team top player info on the action screen
+    	// initialized to the first 5 player names and scores since starting scores should all be 0
+    	void createActionRedTeam() {
+		//JTextArea redPlayerNames[] = new JTextArea[6];
+        	//JTextArea redPlayerScores[] = new JTextArea[6];
+        
+		for(int i = 0; i < redPlayerNames.length; i++)
+		{
+            		redPlayerNames[i] = new JTextArea();
+            		redPlayerScores[i] = new JTextArea();
+
+            		// text boxes for scores have right alignment instead of left
+            		redPlayerScores[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+			redPlayerNames[i].setEditable(false);
+			redPlayerNames[i].setForeground(Color.RED);
+			redPlayerNames[i].setBackground(Color.BLACK);
+
+            		redPlayerScores[i].setEditable(false);
+			redPlayerScores[i].setForeground(Color.RED);
+			redPlayerScores[i].setBackground(Color.BLACK);
+
+			redPlayerNames[i].setMaximumSize(new Dimension(300, 35));
+            		redPlayerScores[i].setMaximumSize(new Dimension(125, 35));
+
+            		redPlayerNames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+            		redPlayerScores[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+
+            		// testing text
+            		//redPlayerNames[i].setText("samplePlayer" + i);
+            		//redPlayerScores[i].setText("sampleScore" + i);
+
+            		// initializes textboxes to first 5 players of red team
+            		// updates to score will likely need to update which players are displayed
+            		redPlayerNames[i].setText(data.teamRed[i].codename);
+            		if(data.teamRed[i].codename != "") {
+                		redPlayerScores[i].setText("" + data.teamRed[i].score);
+            		}
+            
+			// add to panel
+			this.actionPlayerColumns[0].add(redPlayerNames[i]);
+           		this.actionPlayerColumns[1].add(redPlayerScores[i]);
+		}
+        	// set up text for the row with the total team score
+        	redPlayerNames[5].setText("");
+        	redPlayerScores[5].setText("" + redTotal);
+    	}
+
+    	// make text areas for green team top player info on the action screen
+    	// initialized to the first 5 player names and scores since starting scores should all be 0
+    	void createActionGreenTeam() {
+        	//JTextArea greenPlayerNames[] = new JTextArea[6];
+        	//JTextArea greenPlayerScores[] = new JTextArea[6];
+
+        	for(int i = 0; i < greenPlayerNames.length; i++)
+		{
+            		greenPlayerNames[i] = new JTextArea();
+            		greenPlayerScores[i] = new JTextArea();
+
+            		// text boxes for scores have right alignment instead of left
+            		greenPlayerScores[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+            		greenPlayerNames[i].setEditable(false);
+			greenPlayerNames[i].setForeground(Color.GREEN);
+			greenPlayerNames[i].setBackground(Color.BLACK);
+
+            		greenPlayerScores[i].setEditable(false);
+			greenPlayerScores[i].setForeground(Color.GREEN);
+			greenPlayerScores[i].setBackground(Color.BLACK);
+
+			// space them out evenly horizontally; same height on the screen
+            		greenPlayerNames[i].setMaximumSize(new Dimension(300, 35));
+            		greenPlayerScores[i].setMaximumSize(new Dimension(125, 35));
+
+            		greenPlayerNames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+            		greenPlayerScores[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+
+           		// testing text
+            		//greenPlayerNames[i].setText("samplePlayer" + i);
+            		//greenPlayerScores[i].setText("sampleScore" + i);
+
+            		// initializes textboxes to first 5 players of green team
+            		// updates to score will likely need to update which players are displayed
+            		greenPlayerNames[i].setText(data.teamGreen[i].codename);
+            		if(data.teamGreen[i].codename != "") {
+                		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
+            		}
+            
+			// add to panel
+            		this.actionPlayerColumns[2].add(greenPlayerNames[i]);
+            		this.actionPlayerColumns[3].add(greenPlayerScores[i]);
+		}
+        	// set up text for the row with the total team score
+        	greenPlayerNames[5].setText("");
+        	greenPlayerScores[5].setText("" + greenTotal);
+	}
+
+    	// sets topActionScreen textboxes to info for first 5 players of each team
+    	// probably shouldn't be used during a game - no score check set up yet
+    	void beforeGameActionUpdate() {
+        	for(int i = 0; i < redPlayerNames.length; i++) {    
+            		redPlayerNames[i].setText(data.teamRed[i].codename);
+            		if(data.teamRed[i].codename != "") {
+                		redPlayerScores[i].setText("" + data.teamRed[i].score);
+            		}
+        	}
+        	for(int i = 0; i < greenPlayerNames.length; i++) {    
+            		greenPlayerNames[i].setText(data.teamGreen[i].codename);
+            		if(data.teamGreen[i].codename != "") {
+                		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
+            		}
+        	}
+    	}
+
+    	void testTopActionScreen1() {
+        	// initialize some player names so they display
+        	for(int i = 0; i < 5; i++) {
+            		data.teamRed[i].codename = "Bob" + i;
+        	}
+        	for(int i = 0; i < 5; i++) {
+            		data.teamGreen[i].codename = "Steve" + i;
+        	}
+    	}
+   	void testTopActionScreen2() {
+        	// initialize some player names so they display
+        	for(int i = 0; i < 5; i++) {
+            		data.teamRed[i].codename = "John" + i;
+        	}
+        	for(int i = 0; i < 5; i++) {
+            		data.teamGreen[i].codename = "Bill" + i;
+        	}
+    	}
+   	// --------------------------------------------------------------------------
+	
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{
