@@ -43,6 +43,8 @@ public class Main extends JFrame
 		view.createPlayerEntryScreen(controller); //NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
 		view.mainPanel.add(view.entryPanel);
 
+		view.testTopActionScreen1();   // initializes codenames so they display on action screen
+		
 		view.createPlayerActionScreen(controller);
 		//view.mainPanel.add(view.actionPanel);
 		
