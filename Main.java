@@ -1,12 +1,7 @@
 // Will run the program and initialize classes
-
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import javax.swing.BoxLayout;
-import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.Insets;
-import java.awt.Color;
 import java.util.concurrent.TimeUnit;
 
 
@@ -38,13 +33,9 @@ public class Main extends JFrame
 
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
 		
-		view.startGUI();
-		
-		view.createPlayerEntryScreen(controller); //NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
-		view.mainPanel.add(view.entryPanel);
-
+		view.startGUI(controller);
+		view.createPlayerEntryScreen(controller);
 		view.createPlayerActionScreen(controller);
-		//view.mainPanel.add(view.actionPanel);
 		
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
