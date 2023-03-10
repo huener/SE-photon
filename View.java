@@ -1,5 +1,6 @@
 // Java GUI window setup consists of a navigation panel and a gameplay panel. The gameplay panel shifts between player entry, gameplay, and game over screens as necessary.
 
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -8,7 +9,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
 import javax.swing.JTextField;
-import java.awt.Insets;
+// import java.awt.Insets;
 import java.awt.Font;
 import javax.swing.border.Border; 
 import javax.swing.BorderFactory;
@@ -27,6 +28,7 @@ class View extends JPanel
 	//Panels Framework
 	JPanel titlePanel;
 	JPanel mainPanel;
+	CardLayout mainPanelCards;
 	JPanel navPanel;
 	JPanel bottomPanel;
 
@@ -38,12 +40,13 @@ class View extends JPanel
 
     View(Controller c, Data d)
 	{
+		mainPanelCards = new CardLayout();
 		c.setView(this); 	//sets the controller's view to this view instance in order for the two to be able to communicate
-        data = d;
+		data = d;
 		bottomText = new JTextField(50);
 		//initiating and sizing panels
 		titlePanel = new JPanel(); titlePanel.setMaximumSize(new Dimension(960, 50)); titlePanel.setBackground(Color.black);
-		mainPanel = new JPanel(); mainPanel.setMaximumSize(new Dimension(960, 580)); mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS)); mainPanel.setBackground(Color.black);
+		mainPanel = new JPanel(); mainPanel.setLayout(mainPanelCards); mainPanel.setMaximumSize(new Dimension(960, 580)); ; mainPanel.setBackground(Color.black);
 		navPanel = new JPanel(); navPanel.setMaximumSize(new Dimension(960, 60)); navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS)); navPanel.setBackground(Color.black);
 		bottomPanel = new JPanel(); bottomPanel.setMaximumSize(new Dimension(960, 30));
 
@@ -69,18 +72,18 @@ class View extends JPanel
 		
 	}
 
-	void startGUI()
+	void startGUI(Controller c)
 	{
 		this.add(titlePanel);
         this.add(mainPanel);
         this.add(navPanel);
         this.add(bottomPanel);
 
-		createNavigationBar();
+		createNavigationBar(c);
 		createBottomText();
 	}
 
-	void createNavigationBar() {
+	void createNavigationBar(Controller c) {
 		// create navigation bar / instructions
 		Border border = BorderFactory.createLineBorder(Color.WHITE);
 		// create array of JTextArea
@@ -89,6 +92,9 @@ class View extends JPanel
 		{
 			navBar[i] = new JTextArea();
 			navBar[i].setEditable(false);
+			navBar[i].setFocusable(true);
+			navBar[i].setFocusTraversalKeysEnabled(true);
+			navBar[i].addKeyListener(c);
 			navBar[i].setForeground(Color.GREEN);
 			navBar[i].setBackground(Color.BLACK);
 
@@ -187,11 +193,13 @@ class View extends JPanel
 		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
 		entryPanel.add(greenText);
 
-		// this sets the very first focus tab always has somewhere to go
+		mainPanelCards.addLayoutComponent(entryPanel, "entryPanel");
+		mainPanel.add(entryPanel);
+
+		// this sets the very first focus so tab always has somewhere to go
 		data.teamRed[0].idField.requestFocusInWindow();
 		data.teamRed[0].idField.setFocusCycleRoot(true);
 	}
-
 
 	//function to create action screen, will only create it once but pull it up each time we switch
 	void createPlayerActionScreen(Controller controller)
@@ -200,9 +208,26 @@ class View extends JPanel
 		JPanel botActionPanel = new JPanel(); botActionPanel.setMaximumSize(new Dimension(960, 300));//game action feed
 		JPanel timeActionPanel = new JPanel(); timeActionPanel.setMaximumSize(new Dimension(960, 40)); //game timer
 		this.actionPanel.add(topActionPanel); this.actionPanel.add(botActionPanel); this.actionPanel.add(timeActionPanel);
+
 		topActionPanel.setBackground(Color.red);
+		topActionPanel.addKeyListener(controller);
+		topActionPanel.setFocusable(true);
+		topActionPanel.setFocusTraversalKeysEnabled(false);
+
+		botActionPanel.addKeyListener(controller);
+		botActionPanel.setFocusable(true);
+		botActionPanel.requestFocus();
+		botActionPanel.setFocusTraversalKeysEnabled(false);
+
 		timeActionPanel.setBackground(Color.red);
+		timeActionPanel.addKeyListener(controller);
+		timeActionPanel.setFocusable(true);
+		timeActionPanel.setFocusTraversalKeysEnabled(false);
+
+		mainPanelCards.addLayoutComponent(actionPanel, "actionPanel");
+		mainPanel.add(actionPanel);
 	}
+	
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{
