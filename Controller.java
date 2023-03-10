@@ -59,6 +59,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				else
 				{
 					view.mainPanel.remove(view.entryPanel);
+					//view.testTopActionScreen2();
+                    			view.beforeGameActionUpdate(); // update action screen in case codenames change
 					view.mainPanel.add(view.actionPanel); 
 				}
 			case KeyEvent.VK_F8:	break; // TODO: View Game
