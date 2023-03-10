@@ -13,6 +13,7 @@ class Player
 	JTextField idField, nameField;
 	Dimension idSize, nameSize;
 	JTextArea playerNumText;
+	int score;
 
 	public Player(String codename, int playerID, String tableIndex)
 	{
@@ -20,6 +21,7 @@ class Player
 		this.playerID = playerID;
 		this.tableIndex = tableIndex;
 		setTextFields();
+		score = 0;
 	}
 
 	public Player(String codename, String tableIndex)
@@ -28,6 +30,7 @@ class Player
 		this.playerID = -1;
 		this.tableIndex = tableIndex;
 		setTextFields();
+		score = 0;
 	}
 
 	public Player(int playerID, String tableIndex)
@@ -36,6 +39,7 @@ class Player
 		this.playerID = playerID;
 		this.tableIndex = tableIndex;
 		setTextFields();
+		score = 0;
 	}
 
 	public Player(String tableIndex)
@@ -44,6 +48,7 @@ class Player
 		this.playerID = -1;
 		this.tableIndex = tableIndex;
 		setTextFields();
+		score = 0;
 	}
 
 	void setTextFields()
