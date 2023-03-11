@@ -40,11 +40,11 @@ public class Main extends JFrame
 		
 		view.startGUI();
 		
-		view.createPlayerEntryScreen(controller); //NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
-		view.mainPanel.add(view.entryPanel);
+		//view.createPlayerEntryScreen(controller); //NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
+		//view.mainPanel.add(view.entryPanel);
 
 		view.createPlayerActionScreen(controller);
-		//view.mainPanel.add(view.actionPanel);
+		view.mainPanel.add(view.actionPanel);
 		
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
