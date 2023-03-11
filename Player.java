@@ -64,5 +64,4 @@ class Player
 		nameSize = nameField.getPreferredSize();
 	}
 
-
 }
