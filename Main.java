@@ -1,15 +1,8 @@
 // Will run the program and initialize classes
-
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import javax.swing.BoxLayout;
-import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.Insets;
-import java.awt.Color;
 import java.util.concurrent.TimeUnit;
-
-
 
 
 public class Main extends JFrame
@@ -34,35 +27,32 @@ public class Main extends JFrame
 		
 		// passes listeners through the view and game in order to have controller do the controlling
 		this.addKeyListener(controller);
-        splashScreen();	// draw splash screen and sleep before text boxes are created
+        	splashScreen();	// draw splash screen and sleep before text boxes are created
 
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
-		
-		view.startGUI();
-		
-		view.createPlayerEntryScreen(controller); //NOTE: COMMENTED OUT TO DEVELOP THE PLAYER ACTION SCREEN
-		view.mainPanel.add(view.entryPanel);
 
-		view.testTopActionScreen1();   // initializes codenames so they display on action screen
-		
+		view.startGUI(controller);
+		view.createPlayerEntryScreen(controller);
+
+		view.testTopActionScreen1();
+
 		view.createPlayerActionScreen(controller);
-		//view.mainPanel.add(view.actionPanel);
 		
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
 	}
 
-    void splashScreen()
+    	void splashScreen()
 	{
-        view.repaint();
+        	view.repaint();
         
-        // let splash screen display for 3 seconds
-        if(view.splash == false)
+       	 	// let splash screen display for 3 seconds
+        	if(view.splash == false)
 		{
-            try
-            {
-                TimeUnit.SECONDS.sleep(3);
-            } catch(Exception e) 
+            		try
+            		{
+                		TimeUnit.SECONDS.sleep(3);
+            		} catch(Exception e) 
 			{
 				e.printStackTrace();
 				System.exit(1);
