@@ -75,7 +75,6 @@ class View extends JPanel
         this.add(mainPanel);
         this.add(navPanel);
         this.add(bottomPanel);
-
 		createNavigationBar();
 		createBottomText();
 	}
@@ -201,7 +200,11 @@ class View extends JPanel
 		JPanel timeActionPanel = new JPanel(); timeActionPanel.setMaximumSize(new Dimension(960, 40)); //game timer
 		this.actionPanel.add(topActionPanel); this.actionPanel.add(botActionPanel); this.actionPanel.add(timeActionPanel);
 		topActionPanel.setBackground(Color.red);
+		botActionPanel.setBackground(Color.LIGHT_GRAY);
 		timeActionPanel.setBackground(Color.red);
+
+
+
 	}
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
