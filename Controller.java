@@ -2,7 +2,7 @@
 
 //import java.awt.event.MouseListener;
 //import java.awt.event.MouseEvent;
-// hellpo
+// hellpo ohai :3
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
@@ -18,7 +18,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 	// Mode selectors
 	boolean editMode;
-	boolean entryMode = true; //switches to the player action screen
+	int mainPanelSelect;		// replaced entryMode	0 = view.entryPanel		1 = view.actionPanel	Use in an if statement to change keyboard functionality based on which game mode you are in
 	Player focus, prevFocus;
 
 
@@ -26,6 +26,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	{
 		this.data = data;
 		editMode = true;
+		mainPanelSelect = 0;
 		focus = data.teamRed[0];
 		prevFocus = focus;
 	}
@@ -50,25 +51,15 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			case KeyEvent.VK_F1:	editMode = !editMode; break;
 			case KeyEvent.VK_F3:	break; // TODO: start game
 			case KeyEvent.VK_F5:	
-				entryMode = !entryMode; // TODO: PreEntered Games
-				if(entryMode) 
-				{
-					view.mainPanel.remove(view.actionPanel);
-					view.mainPanel.add(view.entryPanel); 
-				}
-				else
-				{
-					view.mainPanel.remove(view.entryPanel);
-					//view.testTopActionScreen2();
-                    			view.beforeGameActionUpdate(); // update action screen in case codenames change
-					view.mainPanel.add(view.actionPanel); 
-				}
+				view.mainPanelCards.next(view.mainPanel);
+				view.beforeGameActionUpdate();
+				//view.testTopActionScreen2();
+				break;
+
 			case KeyEvent.VK_F8:	break; // TODO: View Game
-			case KeyEvent.VK_F10:	break; // TODO: Flick Sync
 			case KeyEvent.VK_F12:	break; // TODO: clear game text fields
 
-			case KeyEvent.VK_TAB:		   // TODO: data.teamRed[0].idField is the only JTextField component that does not listen to tab or shift+tab commands for some reason. why?
-			case KeyEvent.VK_ENTER:	break; // TODO: tab and enter both need to cause the player object to update variables & querey database
+			case KeyEvent.VK_TAB:	break; // TODO: data.teamRed[0].idField is the only JTextField component that does not listen to tab or shift+tab commands for some reason. why?
 
 		}
 	}
@@ -93,8 +84,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	}
 
 	// These are the events for the FocusListener - they allow us to determine what happens to a given player entry JTextField
-	// when the user clicks/tabs to or away from it. The logic currently present allows us to to determine exactly which player
-	// is currently being updated, with the option to even determine exactly which field is focused as well. 
+	// on the player entry screen when the user clicks/tabs to or away from it. The logic currently present allows us to to 
+	// determine exactly which player is currently being updated, with the option to even determine exactly which field is focused as well. 
 	public void focusGained(FocusEvent e)
 	{
 		char[] name = ((e.getComponent()).getName()).toCharArray();
@@ -187,7 +178,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		else
 		{
 			// disable text field editing
-			//editTextFields(false);
+			editTextFields(false);
 		}
 	}
 
