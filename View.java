@@ -176,6 +176,7 @@ class View extends JPanel
 	//function call to create the PES
 	void createPlayerEntryScreen(Controller controller)
 	{
+		entryPanel.setLayout(null);
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
 			data.teamRed[i] = new Player("R" + i);
@@ -183,8 +184,8 @@ class View extends JPanel
 			entryPanel.add(data.teamRed[i].idField);
 			entryPanel.add(data.teamRed[i].nameField);
 
-			data.teamRed[i].idField.setBounds(150 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
-			data.teamRed[i].nameField.setBounds(225 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
+			data.teamRed[i].idField.setBounds(150 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
+			data.teamRed[i].nameField.setBounds(225 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
 			data.teamRed[i].idField.addKeyListener(controller);
 			data.teamRed[i].nameField.addKeyListener(controller);
 			data.teamRed[i].idField.addFocusListener(controller);
@@ -192,7 +193,7 @@ class View extends JPanel
 
 			//number labels
 			data.teamRed[i].playerNumText.setText("" + i);
-			data.teamRed[i].playerNumText.setBounds(130 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, 200, 20);
+			data.teamRed[i].playerNumText.setBounds(130 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, 200, 20);
 			data.teamRed[i].playerNumText.setFocusable(false);
 			entryPanel.add(data.teamRed[i].playerNumText);
 		}
@@ -202,8 +203,8 @@ class View extends JPanel
 			data.teamGreen[i] = new Player("G" + i);
 			entryPanel.add(data.teamGreen[i].idField);
 			entryPanel.add(data.teamGreen[i].nameField);
-			data.teamGreen[i].idField.setBounds(550 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
-			data.teamGreen[i].nameField.setBounds(625 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
+			data.teamGreen[i].idField.setBounds(550 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
+			data.teamGreen[i].nameField.setBounds(625 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
 			data.teamGreen[i].idField.addKeyListener(controller);
 			data.teamGreen[i].nameField.addKeyListener(controller);
 			data.teamGreen[i].idField.addFocusListener(controller);
@@ -211,7 +212,7 @@ class View extends JPanel
 
 			//number labels
 			data.teamGreen[i].playerNumText.setText("" + i);
-			data.teamGreen[i].playerNumText.setBounds(530 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, 200, 20);
+			data.teamGreen[i].playerNumText.setBounds(530 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, 200, 20);
 			data.teamGreen[i].playerNumText.setFocusable(false);
 			entryPanel.add(data.teamGreen[i].playerNumText);
 		}
@@ -219,7 +220,7 @@ class View extends JPanel
 		JTextArea redText = new JTextArea("RED TEAM");
 		redText.setForeground(Color.RED);
 		redText.setBackground(Color.BLACK);
-		redText.setBounds(entryPanel.getInsets().left + 220, entryPanel.getInsets().top + 40, 200, 20);
+		redText.setBounds(entryPanel.getInsets().left + 220, entryPanel.getInsets().top + 15, 200, 20);
 		redText.setEditable(false);
 		redText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
 		entryPanel.add(redText);
@@ -227,7 +228,7 @@ class View extends JPanel
 		JTextArea greenText = new JTextArea("GREEN TEAM");
 		greenText.setForeground(Color.GREEN);
 		greenText.setBackground(Color.BLACK);
-		greenText.setBounds(entryPanel.getInsets().left + 610, entryPanel.getInsets().top + 40, 200, 20);
+		greenText.setBounds(entryPanel.getInsets().left + 610, entryPanel.getInsets().top + 15, 200, 20);
 		greenText.setEditable(false);
 		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
 		entryPanel.add(greenText);
