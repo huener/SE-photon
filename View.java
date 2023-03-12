@@ -16,7 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.ComponentOrientation;
-import java.util.concurrent.TimeUnit;
+// import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
 
 class View extends JPanel
