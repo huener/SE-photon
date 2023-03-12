@@ -11,11 +11,11 @@ public class Main extends JFrame
 	Data data = new Data();
 	Controller controller = new Controller(data);
 	View view = new View(controller, data);
-	
+
 
 	public Main()
 	{
-		
+
 		// JFrame window customization
 		this.setTitle("Photon Laser Tag Simulation (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧");
 		this.setSize(960, 720);
@@ -24,18 +24,19 @@ public class Main extends JFrame
 		this.getContentPane().add(view);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		
+
 		// passes listeners through the view and game in order to have controller do the controlling
 		this.addKeyListener(controller);
         	splashScreen();	// draw splash screen and sleep before text boxes are created
 
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
-		
+
 		view.startGUI(controller);
 		view.createPlayerEntryScreen(controller);
 		view.createPlayerActionScreen(controller);
+		view.mainPanel.add(view.actionPanel);
 		view.createTimerScreen();
-		
+
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
 	}
@@ -43,14 +44,14 @@ public class Main extends JFrame
     	void splashScreen()
 	{
         	view.repaint();
-        
+
        	 	// let splash screen display for 3 seconds
         	if(view.splash == false)
 		{
             		try
             		{
                 		TimeUnit.SECONDS.sleep(3);
-            		} catch(Exception e) 
+            		} catch(Exception e)
 			{
 				e.printStackTrace();
 				System.exit(1);

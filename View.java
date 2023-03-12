@@ -2,32 +2,43 @@
 
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.BoxLayout;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
+import java.awt.Component;
 import javax.swing.JTextField;
-// import java.awt.Insets;
+import javax.swing.SwingConstants;
+import java.awt.Insets;
 import java.awt.Font;
-import javax.swing.border.Border; 
+import javax.swing.border.Border;
+import javax.swing.text.FlowView;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.ComponentOrientation;
 // import java.util.concurrent.TimeUnit;
+import javax.swing.GroupLayout;
 import javax.swing.Timer;
 
 class View extends JPanel
 {
 	Data data;
 
+	JPanel topActionPanel;
+	JPanel botActionPanel;
+	JPanel timeActionPanel;
+
 	//Splash Screen
 	BufferedImage splash_image;
    	int splashFrames = 0;
     	boolean splash = false;
-		
+
 	//Timer Variables
 	int countDown = 3; //number from which we count down
 	Timer  timer;
@@ -44,7 +55,7 @@ class View extends JPanel
 	JPanel topActionPanel;
    	JPanel botActionPanel;
     	JPanel timeActionPanel;
-	
+
 	JPanel playerInfoPanel;
     	JPanel teamNamePanel;
     	JPanel actionPlayerColumns[] = new JPanel[4];
@@ -74,15 +85,15 @@ class View extends JPanel
 		data = d;
 		bottomText = new JTextField(50);
 		//initiating and sizing panels
-		titlePanel = new JPanel(); 
-		titlePanel.setMaximumSize(new Dimension(960, 50)); 
+		titlePanel = new JPanel();
+		titlePanel.setMaximumSize(new Dimension(960, 50));
 		titlePanel.setBackground(Color.black);
-		
-		mainPanel = new JPanel(); 
-		mainPanel.setLayout(mainPanelCards); 
-		mainPanel.setMaximumSize(new Dimension(960, 580)); 
+
+		mainPanel = new JPanel();
+		mainPanel.setLayout(mainPanelCards);
+		mainPanel.setMaximumSize(new Dimension(960, 580));
 		mainPanel.setBackground(Color.black);
-		
+
 		navPanel = new JPanel(); navPanel.setMaximumSize(new Dimension(960, 60)); navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS)); navPanel.setBackground(Color.black);
 		bottomPanel = new JPanel(); bottomPanel.setMaximumSize(new Dimension(960, 30));
 
@@ -92,8 +103,8 @@ class View extends JPanel
         	// loads the picture for the splash screen.
         	splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
         	// of the window matches best.
-			
-		
+
+
 	}
     	// window size is set to 960 x 720 in main
 
@@ -102,13 +113,13 @@ class View extends JPanel
 		//background color
 		g.setColor(new Color(0, 0, 0));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        
+
         	if(splash == false) {
             	g.drawImage(splash_image, 0, 0, null);
             	//splash = true;
         	}
-			
-		
+
+
 	}
 
 	void startGUI(Controller c)
@@ -145,7 +156,7 @@ class View extends JPanel
 				navBar[i].setBorder(BorderFactory.createCompoundBorder(border,
 					BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 			}
-            
+
 			// add to view (so they show up)
 			this.navPanel.add(navBar[i]);
 		}
@@ -252,7 +263,7 @@ class View extends JPanel
 		topActionPanel.addKeyListener(controller);
 		topActionPanel.setFocusable(true);
 		topActionPanel.setFocusTraversalKeysEnabled(false);
-		
+
 		// contains teamNamePanel and playerInfoPanel, y-axis layout so teamName is above playerInfo
 		topActionPanel.setLayout(new BoxLayout(topActionPanel, BoxLayout.Y_AXIS)); // changed from red to black to match example video
 		createTopActionPanel();
@@ -261,6 +272,7 @@ class View extends JPanel
 		botActionPanel.setFocusable(true);
 		botActionPanel.requestFocus();
 		botActionPanel.setFocusTraversalKeysEnabled(false);
+		createTeamFeeds();
 
 		timeActionPanel.setBackground(Color.red);
 		timeActionPanel.addKeyListener(controller);
@@ -270,7 +282,7 @@ class View extends JPanel
 		mainPanelCards.addLayoutComponent(actionPanel, "actionPanel");
 		mainPanel.add(actionPanel);
 	}
-	
+
 	void createTimerScreen(){
 		timerPanel = new JPanel();
 		timerPanel = drawTimerImage(countDown);
@@ -278,7 +290,7 @@ class View extends JPanel
 		timerPanel.setBackground(Color.BLUE);
 		timerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
-		
+
 		mainPanelCards.addLayoutComponent(timerPanel, "timerPanel");
 		mainPanel.add(timerPanel);
 
@@ -318,24 +330,24 @@ class View extends JPanel
         	spacing1.setText("                          ");
         	playerInfoPanel.add(spacing1);
 
-        	this.playerInfoPanel.add(actionPlayerColumns[0]); 
-        	this.playerInfoPanel.add(actionPlayerColumns[1]); 
+        	this.playerInfoPanel.add(actionPlayerColumns[0]);
+        	this.playerInfoPanel.add(actionPlayerColumns[1]);
 
         	JTextArea spacing2 = new JTextArea();
         	spacing2.setMaximumSize(new Dimension(70, 200));
         	spacing2.setBackground(Color.black);
         	playerInfoPanel.add(spacing2);
 
-        	this.playerInfoPanel.add(actionPlayerColumns[2]); 
-        	this.playerInfoPanel.add(actionPlayerColumns[3]); 
+        	this.playerInfoPanel.add(actionPlayerColumns[2]);
+        	this.playerInfoPanel.add(actionPlayerColumns[3]);
 
         	JTextArea spacing3 = new JTextArea();
         	spacing3.setMaximumSize(new Dimension(30, 200));
         	spacing3.setBackground(Color.black);
         	playerInfoPanel.add(spacing3);
 
-        	this.topActionPanel.add(teamNamePanel); 
-        	this.topActionPanel.add(playerInfoPanel); 
+        	this.topActionPanel.add(teamNamePanel);
+        	this.topActionPanel.add(playerInfoPanel);
 
         	// create rest of upper action screen
         	createTeamNamePanel();
@@ -363,9 +375,9 @@ class View extends JPanel
         	teamnames[1].setText("                                                     ");
         	teamnames[2].setText("GREEN TEAM");
         	// add to panel
-        	this.teamNamePanel.add(teamnames[0]); 
-        	this.teamNamePanel.add(teamnames[1]); 
-        	this.teamNamePanel.add(teamnames[2]); 
+        	this.teamNamePanel.add(teamnames[0]);
+        	this.teamNamePanel.add(teamnames[1]);
+        	this.teamNamePanel.add(teamnames[2]);
     	}
 
     	// make text areas for red team top player info on the action screen
@@ -373,7 +385,7 @@ class View extends JPanel
     	void createActionRedTeam() {
 		//JTextArea redPlayerNames[] = new JTextArea[6];
         	//JTextArea redPlayerScores[] = new JTextArea[6];
-        
+
 		for(int i = 0; i < redPlayerNames.length; i++)
 		{
             		redPlayerNames[i] = new JTextArea();
@@ -406,7 +418,7 @@ class View extends JPanel
             		if(data.teamRed[i].codename != "") {
                 		redPlayerScores[i].setText("" + data.teamRed[i].score);
             		}
-            
+
 			// add to panel
 			this.actionPlayerColumns[0].add(redPlayerNames[i]);
            		this.actionPlayerColumns[1].add(redPlayerScores[i]);
@@ -455,7 +467,7 @@ class View extends JPanel
             		if(data.teamGreen[i].codename != "") {
                 		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
             		}
-            
+
 			// add to panel
             		this.actionPlayerColumns[2].add(greenPlayerNames[i]);
             		this.actionPlayerColumns[3].add(greenPlayerScores[i]);
@@ -468,13 +480,13 @@ class View extends JPanel
     	// sets topActionScreen textboxes to info for first 5 players of each team
     	// probably shouldn't be used during a game - no score check set up yet
     	void beforeGameActionUpdate() {
-        	for(int i = 0; i < redPlayerNames.length; i++) {    
+        	for(int i = 0; i < redPlayerNames.length; i++) {
             		redPlayerNames[i].setText(data.teamRed[i].codename);
             		if(data.teamRed[i].codename != "") {
                 		redPlayerScores[i].setText("" + data.teamRed[i].score);
             		}
         	}
-        	for(int i = 0; i < greenPlayerNames.length; i++) {    
+        	for(int i = 0; i < greenPlayerNames.length; i++) {
             		greenPlayerNames[i].setText(data.teamGreen[i].codename);
             		if(data.teamGreen[i].codename != "") {
                 		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
@@ -500,9 +512,50 @@ class View extends JPanel
             		data.teamGreen[i].codename = "Bill" + i;
         	}
     	}
+
+			void createTeamFeeds(){
+				//Create Red Team side
+				JPanel redTeamPanel = new JPanel();
+				redTeamPanel.setBackground(Color.RED);
+				redTeamPanel.setMaximumSize(new Dimension(17,33));
+
+				JTextArea redTeamText = new JTextArea(17,33);
+				redTeamText.setBackground(Color.BLACK);
+				redTeamText.setForeground(Color.WHITE);
+				redTeamText.setText("Bob1 hit by Steve3");
+				redTeamText.setEditable(false);
+
+				JScrollPane redTeamScrollPane = new JScrollPane(redTeamText);
+				redTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				redTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+				redTeamPanel.add(redTeamScrollPane);
+
+
+				//Create Green Team side
+				JPanel greenTeamPanel = new JPanel();
+				greenTeamPanel.setBackground(Color.GREEN);
+				greenTeamPanel.setMaximumSize(new Dimension(17,33));
+
+				JTextArea greenTeamText = new JTextArea(17,33);
+				greenTeamText.setBackground(Color.BLACK);
+				greenTeamText.setForeground(Color.WHITE);
+				greenTeamText.setText("Steve0 hit by Bob4");
+				greenTeamText.setEditable(false);
+
+				JScrollPane greenTeamScrollPane = new JScrollPane(greenTeamText);
+				greenTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				greenTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+				greenTeamPanel.add(greenTeamScrollPane);
+
+
+				//Creates a split pane between both scrollboxes
+				JSplitPane s1 = new JSplitPane(SwingConstants.VERTICAL, redTeamPanel, greenTeamPanel);
+				s1.setOrientation(SwingConstants.VERTICAL);
+				this.botActionPanel.add(s1);
+			}
    	// --------------------------------------------------------------------------
 
-	
+
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{
@@ -511,7 +564,7 @@ class View extends JPanel
 		{
 			temp = ImageIO.read(new File(imageName));
 		}
-		catch(Exception e) 
+		catch(Exception e)
 		{
 			e.printStackTrace(System.err);
 			System.exit(1);
@@ -525,15 +578,15 @@ class View extends JPanel
 	//-----------------------------------------
 
 		void startCountDown(){
-			
+
 			timer = new Timer(1000, (e) -> {
-                   
+
 					System.out.println("count " + countDown);
 					timerPanel = drawTimerImage(countDown);
 					mainPanelCards.addLayoutComponent(timerPanel, "timerPanel"+countDown);
 					mainPanel.add(timerPanel);
 					mainPanelCards.show(mainPanel, "timerPanel"+countDown);
-                    
+
 					 countDown--;
 					 repaint();
 					if (countDown == -1) { // countdown finished
@@ -545,9 +598,9 @@ class View extends JPanel
                 });
                 timer.setInitialDelay(0);
                 timer.start();
-		
+
 			countDown=3;
-			
+
 		}
 	public static JPanel drawTimerImage(int num) {
         JPanel panel = new JPanel() {

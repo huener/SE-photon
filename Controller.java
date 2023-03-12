@@ -182,7 +182,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		if (editMode && (view.splash == true))
 		{
 			// enable editing the text fields and database querying upon player focus loss
-			editTextFields(true);
+			//editTextFields(true);//commented 3/11/23
 
 			try
 			{
