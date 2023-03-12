@@ -1,6 +1,6 @@
 // handles keyboard navigation commands
 
-// import java.awt.event.MouseListener;
+//import java.awt.event.MouseListener;
 //import java.awt.event.MouseEvent;
 // hellpo ohai :3
 import java.awt.event.ActionListener;
@@ -36,7 +36,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		view = v;
 	}
 
-	//
 	//KeyListener methods
 	public void keyPressed(KeyEvent e)	{	}
 	public void keyTyped(KeyEvent e)	{	}
@@ -49,32 +48,16 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			case KeyEvent.VK_LEFT:  break;
 			case KeyEvent.VK_RIGHT:	break;
 
-			case KeyEvent.VK_F1:
-				if(mainPanelSelect == 0)
-				{
-					editMode = !editMode;
-					view.bottomPanel.setVisible(!view.bottomPanel.isVisible());
-				}
-				break;
-			case KeyEvent.VK_F3:	break; // TODO: View Game
-			case KeyEvent.VK_F5:
-				// If statement to switch the mainPanelSelecton
-				if(mainPanelSelect == 0)
-				{
-					mainPanelSelect = 1;
-					view.bottomPanel.setVisible(false);
-				}
-
-				else
-					mainPanelSelect = 0;
-
-				// actually switch the mainPanelSelection to correct card
+			case KeyEvent.VK_F1:	editMode = !editMode; break;
+			case KeyEvent.VK_F3:	view.mainPanelCards.show(view.mainPanel, "timerPanel");
+									view.startCountDown(); break; // TODO: start game
+			case KeyEvent.VK_F5:	
 				view.mainPanelCards.show(view.mainPanel, "actionPanel");
 				view.beforeGameActionUpdate();
-				view.startCountDown();
 				//view.testTopActionScreen2();
 				break;
 
+			case KeyEvent.VK_F8:	break; // TODO: View Game
 			case KeyEvent.VK_F12:	break; // TODO: clear game text fields
 
 			case KeyEvent.VK_TAB:	break; // TODO: data.teamRed[0].idField is the only JTextField component that does not listen to tab or shift+tab commands for some reason. why?
@@ -102,8 +85,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	}
 
 	// These are the events for the FocusListener - they allow us to determine what happens to a given player entry JTextField
-	// on the player entry screen when the user clicks/tabs to or away from it. The logic currently present allows us to to
-	// determine exactly which player is currently being updated, with the option to even determine exactly which field is focused as well.
+	// on the player entry screen when the user clicks/tabs to or away from it. The logic currently present allows us to to 
+	// determine exactly which player is currently being updated, with the option to even determine exactly which field is focused as well. 
 	public void focusGained(FocusEvent e)
 	{
 		char[] name = ((e.getComponent()).getName()).toCharArray();
@@ -119,7 +102,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		}
 
 		if (team == 'R')
-			focus = data.teamRed[index];
+			focus = data.teamRed[index]; 
 		else
 			focus = data.teamGreen[index];
 	}
@@ -139,7 +122,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		}
 
 		if (team == 'R')
-			prevFocus = data.teamRed[index];
+			prevFocus = data.teamRed[index]; 
 		else
 			prevFocus = data.teamGreen[index];
 
@@ -156,19 +139,14 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			}
 
 		}
-
+			
 		else
 		{
 			if (prevFocus.codename != (prevFocus.nameField.getText()))
 				prevFocus.codename = prevFocus.nameField.getText();
 		}
-
+			
 	}
-
-	//
-	// TODO: MouseListener functions for bottomNavBar functionality
-
-
 
 	//
 	// This code is called every time the controller is updated, which is specified by the framelimiter in main.java
@@ -181,7 +159,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			editTextFields(true);
 
 			try
-			{
+			{ 
 				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename != ""))
 				{
 
@@ -206,3 +184,4 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	}
 
 }
+
