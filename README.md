@@ -4,6 +4,13 @@
 
 The main software for Photon Laser Tag.
 
+# Installation
+Download all files in the main branch, then compile from command line:
+```
+javac Main.java Controller.java Data.java Player.java View.java
+java Main
+```
+
 # How To Use
 
 - Press F1 to enable edit mode while on the player entry screen. 
