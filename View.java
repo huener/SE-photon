@@ -141,11 +141,11 @@ class View extends JPanel
 		// so strings are formatted to be centered in the textbox
 		navBar[0].setText("         F1 \n        Edit \n      Game");
 		navBar[1].setText("         F2 \n      Game \n  Parameters");
-		navBar[2].setText("         F3 \n       Start \n      Game");
-		navBar[4].setText("         F5 \n  PreEntered \n     Games");
+		navBar[2].setText("         F3 \n        View \n      Game");
+		navBar[4].setText("         F5 \n       Start\n      Game");
 		navBar[6].setText("         F7");
-		navBar[7].setText("         F8 \n       View \n      Game");
-		navBar[9].setText("        F10 \n       Flick \n       Sync");
+		navBar[7].setText("         F8");
+		navBar[9].setText("        F10");
 		navBar[11].setText("        F12 \n       Clear \n      Game");
 	}
 
@@ -155,7 +155,7 @@ class View extends JPanel
 		JTextField bottomText = new JTextField(100);
 		bottomText.setEditable(false);
 		bottomText.setHorizontalAlignment(JTextField.CENTER);
-		bottomText.setText("<Del> to Delete Player, <Ins> to Manually Insert, or edit codename");
+		bottomText.setText(" Press F1 to toggle Edit Mode. Click the text boxes to enter a new player, move to another to save player. ");
 		bottomText.setFont(new java.awt.Font("Arial", Font.BOLD, 12));
 		this.bottomPanel.add(bottomText);
 	}

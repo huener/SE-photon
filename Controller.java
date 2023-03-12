@@ -1,6 +1,6 @@
 // handles keyboard navigation commands
 
-//import java.awt.event.MouseListener;
+// import java.awt.event.MouseListener;
 //import java.awt.event.MouseEvent;
 // hellpo ohai :3
 import java.awt.event.ActionListener;
@@ -36,6 +36,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		view = v;
 	}
 
+	//
 	//KeyListener methods
 	public void keyPressed(KeyEvent e)	{	}
 	public void keyTyped(KeyEvent e)	{	}
@@ -48,15 +49,31 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			case KeyEvent.VK_LEFT:  break;
 			case KeyEvent.VK_RIGHT:	break;
 
-			case KeyEvent.VK_F1:	editMode = !editMode; break;
-			case KeyEvent.VK_F3:	break; // TODO: start game
+			case KeyEvent.VK_F1:	
+				if(mainPanelSelect == 0)
+				{
+					editMode = !editMode;
+					view.bottomPanel.setVisible(!view.bottomPanel.isVisible());
+				}
+				break;
+			case KeyEvent.VK_F3:	break; // TODO: View Game
 			case KeyEvent.VK_F5:	
+				// If statement to switch the mainPanelSelecton 
+				if(mainPanelSelect == 0)
+				{
+					mainPanelSelect = 1;
+					view.bottomPanel.setVisible(false);
+				}
+					
+				else
+					mainPanelSelect = 0;
+				
+				// actually switch the mainPanelSelection to correct card
 				view.mainPanelCards.next(view.mainPanel);
 				view.beforeGameActionUpdate();
 				//view.testTopActionScreen2();
 				break;
 
-			case KeyEvent.VK_F8:	break; // TODO: View Game
 			case KeyEvent.VK_F12:	break; // TODO: clear game text fields
 
 			case KeyEvent.VK_TAB:	break; // TODO: data.teamRed[0].idField is the only JTextField component that does not listen to tab or shift+tab commands for some reason. why?
@@ -146,6 +163,11 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		}
 			
 	}
+
+	//
+	// TODO: MouseListener functions for bottomNavBar functionality
+
+	
 
 	//
 	// This code is called every time the controller is updated, which is specified by the framelimiter in main.java
