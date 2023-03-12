@@ -216,29 +216,26 @@ class View extends JPanel
 		botActionPanel.setBackground(Color.BLACK);
 		timeActionPanel.setBackground(Color.red);
 		createTeamFeeds();
-
 	}
 
-	//Displays the player action feed which tells when a player has been hit.
+	//Displays the game action feed which tells when a player has been hit.
 	void createTeamFeeds(){
 		//Create Red Team side
 		JPanel redTeamPanel = new JPanel();
 		redTeamPanel.setBackground(Color.RED);
 		redTeamPanel.setMaximumSize(new Dimension(17,33));
-		//redTeamPanel.setLocation(900, 260);
-		
+
 		JTextArea redTeamText = new JTextArea(17,33);
-		redTeamText.setAlignmentX(LEFT_ALIGNMENT);
 		redTeamText.setBackground(Color.BLACK);
 		redTeamText.setForeground(Color.WHITE);
 		redTeamText.setText("Bob1 hit by Steve3");
+		redTeamText.setEditable(false);
 
 		JScrollPane redTeamScrollPane = new JScrollPane(redTeamText);
 		redTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		redTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		redTeamPanel.add(redTeamScrollPane);
-	
-		//this.botActionPanel.add(redTeamPanel);
+
 
 		//Create Green Team side
 		JPanel greenTeamPanel = new JPanel();
@@ -246,26 +243,21 @@ class View extends JPanel
 		greenTeamPanel.setMaximumSize(new Dimension(17,33));
 	
 		JTextArea greenTeamText = new JTextArea(17,33);
-		greenTeamText.setAlignmentX(LEFT_ALIGNMENT);
 		greenTeamText.setBackground(Color.BLACK);
 		greenTeamText.setForeground(Color.WHITE);
-		greenTeamText.setText("Bob4 hit by Steve0");
+		greenTeamText.setText("Steve0 hit by Bob4");
+		greenTeamText.setEditable(false);
 
 		JScrollPane greenTeamScrollPane = new JScrollPane(greenTeamText);
 		greenTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		greenTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		greenTeamPanel.add(greenTeamScrollPane);
 
-		//this.botActionPanel.add(greenTeamScrollPane);
 
+		//Creates a split pane between both scrollboxes
 		JSplitPane s1 = new JSplitPane(SwingConstants.VERTICAL, redTeamPanel, greenTeamPanel);
 		s1.setOrientation(SwingConstants.VERTICAL);
 		this.botActionPanel.add(s1);
-
-		//redTeamFeed.setEditable(false);
-		//redTeamFeed.setForeground(Color.GREEN);
-		//redTeamFeed.setBackground(Color.BLACK);
-		//feedBoxes[0].setMaximumSize(new Dimension(950,290));
 	}
 
 
