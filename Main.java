@@ -30,12 +30,9 @@ public class Main extends JFrame
         	splashScreen();	// draw splash screen and sleep before text boxes are created
 
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
-
+		
 		view.startGUI(controller);
 		view.createPlayerEntryScreen(controller);
-
-		view.testTopActionScreen1();
-
 		view.createPlayerActionScreen(controller);
 		
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
