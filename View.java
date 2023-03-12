@@ -1,23 +1,36 @@
 // Java GUI window setup consists of a navigation panel and a gameplay panel. The gameplay panel shifts between player entry, gameplay, and game over screens as necessary.
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.BoxLayout;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
 import java.awt.Insets;
 import java.awt.Font;
-import javax.swing.border.Border; 
+import javax.swing.border.Border;
+import javax.swing.text.FlowView;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
+import javax.swing.GroupLayout;
 
 class View extends JPanel
 {
 	Data data;
+
+	JPanel topActionPanel;
+	JPanel botActionPanel;
+	JPanel timeActionPanel;
 
 	//Splash Screen
 	BufferedImage splash_image;
@@ -195,17 +208,67 @@ class View extends JPanel
 	//function to create action screen, will only create it once but pull it up each time we switch
 	void createPlayerActionScreen(Controller controller)
 	{
-		JPanel topActionPanel = new JPanel(); topActionPanel.setMaximumSize(new Dimension(960, 240));//list of players per team
-		JPanel botActionPanel = new JPanel(); botActionPanel.setMaximumSize(new Dimension(960, 300));//game action feed
-		JPanel timeActionPanel = new JPanel(); timeActionPanel.setMaximumSize(new Dimension(960, 40)); //game timer
+		topActionPanel = new JPanel(); topActionPanel.setMaximumSize(new Dimension(960, 240));//list of players per team
+		botActionPanel = new JPanel(); botActionPanel.setMaximumSize(new Dimension(960, 300));//game action feed
+		timeActionPanel = new JPanel(); timeActionPanel.setMaximumSize(new Dimension(960, 40)); //game timer
 		this.actionPanel.add(topActionPanel); this.actionPanel.add(botActionPanel); this.actionPanel.add(timeActionPanel);
-		topActionPanel.setBackground(Color.red);
-		botActionPanel.setBackground(Color.LIGHT_GRAY);
+		topActionPanel.setBackground(Color.BLACK);
+		botActionPanel.setBackground(Color.BLACK);
 		timeActionPanel.setBackground(Color.red);
-
-
+		createTeamFeeds();
 
 	}
+
+	//Displays the player action feed which tells when a player has been hit.
+	void createTeamFeeds(){
+		//Create Red Team side
+		JPanel redTeamPanel = new JPanel();
+		redTeamPanel.setBackground(Color.RED);
+		redTeamPanel.setMaximumSize(new Dimension(17,33));
+		//redTeamPanel.setLocation(900, 260);
+		
+		JTextArea redTeamText = new JTextArea(17,33);
+		redTeamText.setAlignmentX(LEFT_ALIGNMENT);
+		redTeamText.setBackground(Color.BLACK);
+		redTeamText.setForeground(Color.WHITE);
+		redTeamText.setText("Bob1 hit by Steve3");
+
+		JScrollPane redTeamScrollPane = new JScrollPane(redTeamText);
+		redTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		redTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		redTeamPanel.add(redTeamScrollPane);
+	
+		//this.botActionPanel.add(redTeamPanel);
+
+		//Create Green Team side
+		JPanel greenTeamPanel = new JPanel();
+		greenTeamPanel.setBackground(Color.GREEN);
+		greenTeamPanel.setMaximumSize(new Dimension(17,33));
+	
+		JTextArea greenTeamText = new JTextArea(17,33);
+		greenTeamText.setAlignmentX(LEFT_ALIGNMENT);
+		greenTeamText.setBackground(Color.BLACK);
+		greenTeamText.setForeground(Color.WHITE);
+		greenTeamText.setText("Bob4 hit by Steve0");
+
+		JScrollPane greenTeamScrollPane = new JScrollPane(greenTeamText);
+		greenTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		greenTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		greenTeamPanel.add(greenTeamScrollPane);
+
+		//this.botActionPanel.add(greenTeamScrollPane);
+
+		JSplitPane s1 = new JSplitPane(SwingConstants.VERTICAL, redTeamPanel, greenTeamPanel);
+		s1.setOrientation(SwingConstants.VERTICAL);
+		this.botActionPanel.add(s1);
+
+		//redTeamFeed.setEditable(false);
+		//redTeamFeed.setForeground(Color.GREEN);
+		//redTeamFeed.setBackground(Color.BLACK);
+		//feedBoxes[0].setMaximumSize(new Dimension(950,290));
+	}
+
+
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{
