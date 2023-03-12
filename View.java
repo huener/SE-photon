@@ -262,6 +262,7 @@ class View extends JPanel
 		topActionPanel.setLayout(new BoxLayout(topActionPanel, BoxLayout.Y_AXIS)); // changed from red to black to match example video
 		createTopActionPanel();
 
+		botActionPanel.setBackground(Color.BLACK);
 		botActionPanel.addKeyListener(controller);
 		botActionPanel.setFocusable(true);
 		botActionPanel.requestFocus();
