@@ -49,13 +49,22 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			case KeyEvent.VK_LEFT:  break;
 			case KeyEvent.VK_RIGHT:	break;
 
+			case KeyEvent.VK_ESCAPE:
+				if(mainPanelSelect == 1)
+				{
+					view.mainPanelCards.show(view.mainPanel, "entryPanel");
+					mainPanelSelect = 0;
+				}
+				break;
+
 			case KeyEvent.VK_F1:
 				if(mainPanelSelect == 0)
 				{
 					editMode = !editMode;
-					view.bottomPanel.setVisible(!view.bottomPanel.isVisible());
+					view.bottomPanel.setVisible(editMode);
 				}
 				break;
+
 			case KeyEvent.VK_F3:	break; // TODO: View Game
 			case KeyEvent.VK_F5:
 				// If statement to switch the mainPanelSelecton
@@ -63,16 +72,11 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				{
 					mainPanelSelect = 1;
 					view.bottomPanel.setVisible(false);
+					// actually switch the mainPanelSelection to correct card
+					view.mainPanelCards.show(view.mainPanel, "actionPanel");
+					view.beforeGameActionUpdate();
+					view.startCountDown();
 				}
-
-				else
-					mainPanelSelect = 0;
-
-				// actually switch the mainPanelSelection to correct card
-				view.mainPanelCards.show(view.mainPanel, "actionPanel");
-				view.beforeGameActionUpdate();
-				view.startCountDown();
-				//view.testTopActionScreen2();
 				break;
 
 			case KeyEvent.VK_F12:	break; // TODO: clear game text fields
