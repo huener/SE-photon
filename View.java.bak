@@ -31,7 +31,8 @@ class View extends JPanel
 	//Timer Variables
 	int countDown = 3; //number from which we count down
 	Timer  timer;
-
+	int currentCount = 3;
+	boolean inCount = false;
 
 
 	//Panels Framework
@@ -283,7 +284,54 @@ class View extends JPanel
 		mainPanel.add(timerPanel);
 
 	}
+	//
+	//
+	//Start Countdown
+	//
+	//
 
+		void startCountDown(){
+			int waitTime = 2;
+			//pause between numbers (seconds)
+			//mainPanelCards.show(mainPanel, "timerPanel");
+			
+			timer = new Timer(1000, (e) -> {
+                   
+					System.out.println("count " + countDown);
+					timerPanel = drawTimerImage(countDown);
+					mainPanelCards.addLayoutComponent(timerPanel, "timerPanel"+countDown);
+					mainPanel.add(timerPanel);
+					mainPanelCards.show(mainPanel, "timerPanel"+countDown);
+                    
+					 countDown--;
+					 repaint();
+					if (countDown == -1) { // countdown finished
+						timer.stop(); // stop the timer
+						mainPanelCards.show(mainPanel, "actionPanel");
+						beforeGameActionUpdate();
+					}
+                });
+                timer.setInitialDelay(0);
+                timer.start();
+			/*
+			while (countDown > 0) {
+				repaint();
+				System.out.println("count " + countDown);
+				try {
+					TimeUnit.SECONDS.sleep(waitTime); // Wait for the specified amount of time
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				countDown--;
+				
+				
+				repaint();
+			}*/
+			//mainPanelCards.show(mainPanel, "actionPanel");
+			//beforeGameActionUpdate();
+			countDown=3;
+			
+		}
 
 	// --------------------------------------------------------------------------
     	// sets up some panels for the topActionPanel
@@ -518,37 +566,7 @@ class View extends JPanel
 		}
 		return temp;
 	}
-	//-----------------------------------------
-	//
-	//Countdown
-	//
-	//-----------------------------------------
-
-		void startCountDown(){
-			
-			timer = new Timer(1000, (e) -> {
-                   
-					System.out.println("count " + countDown);
-					timerPanel = drawTimerImage(countDown);
-					mainPanelCards.addLayoutComponent(timerPanel, "timerPanel"+countDown);
-					mainPanel.add(timerPanel);
-					mainPanelCards.show(mainPanel, "timerPanel"+countDown);
-                    
-					 countDown--;
-					 repaint();
-					if (countDown == -1) { // countdown finished
-						timer.stop(); // stop the timer
-						//THIS LINE STARTS THE GAME SCREEN
-						mainPanelCards.show(mainPanel, "actionPanel");
-						beforeGameActionUpdate();
-					}
-                });
-                timer.setInitialDelay(0);
-                timer.start();
-		
-			countDown=3;
-			
-		}
+	
 	public static JPanel drawTimerImage(int num) {
         JPanel panel = new JPanel() {
 		BufferedImage countImage;

@@ -49,7 +49,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			case KeyEvent.VK_RIGHT:	break;
 
 			case KeyEvent.VK_F1:	editMode = !editMode; break;
-			case KeyEvent.VK_F3:	
+			case KeyEvent.VK_F3:	view.mainPanelCards.show(view.mainPanel, "timerPanel");
 									view.startCountDown(); break; // TODO: start game
 			case KeyEvent.VK_F5:	
 				view.mainPanelCards.show(view.mainPanel, "actionPanel");
