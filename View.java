@@ -11,28 +11,21 @@ import javax.swing.BoxLayout;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
-import java.awt.Component;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import java.awt.Insets;
 import java.awt.Font;
 import javax.swing.border.Border;
-import javax.swing.text.FlowView;
+// import javax.swing.text.FlowView;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.ComponentOrientation;
 // import java.util.concurrent.TimeUnit;
-import javax.swing.GroupLayout;
 import javax.swing.Timer;
 
 class View extends JPanel
 {
 	Data data;
-
-	JPanel topActionPanel;
-	JPanel botActionPanel;
-	JPanel timeActionPanel;
 
 	//Splash Screen
 	BufferedImage splash_image;
@@ -54,7 +47,7 @@ class View extends JPanel
 
 	JPanel topActionPanel;
    	JPanel botActionPanel;
-    	JPanel timeActionPanel;
+    JPanel timeActionPanel;
 
 	JPanel playerInfoPanel;
     	JPanel teamNamePanel;
