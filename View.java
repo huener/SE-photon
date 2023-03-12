@@ -239,6 +239,10 @@ class View extends JPanel
 		topActionPanel.addKeyListener(controller);
 		topActionPanel.setFocusable(true);
 		topActionPanel.setFocusTraversalKeysEnabled(false);
+		
+		// contains teamNamePanel and playerInfoPanel, y-axis layout so teamName is above playerInfo
+		topActionPanel.setLayout(new BoxLayout(topActionPanel, BoxLayout.Y_AXIS)); // changed from red to black to match example video
+		createTopActionPanel();
 
 		botActionPanel.addKeyListener(controller);
 		botActionPanel.setFocusable(true);
