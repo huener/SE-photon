@@ -3,6 +3,10 @@ import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import java.awt.Toolkit;
 import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.*;
+import java.lang.Math;
 
 
 public class Main extends JFrame
@@ -11,11 +15,24 @@ public class Main extends JFrame
 	Data data = new Data();
 	Controller controller = new Controller(data);
 	View view = new View(controller, data);
+	AudioPlayer audio;
 
 
 	public Main()
 	{
 
+		//initialize sound
+		int trackSelect = (int)(Math.random()*8 + 1);	//random track
+		System.out.println("Playing track: " + trackSelect);
+		try{
+			audio = new AudioPlayer(trackSelect);
+		}	catch(Exception e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+		audio.play();
+		
 		// JFrame window customization
 		this.setTitle("Photon Laser Tag Simulation (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧");
 		this.setSize(960, 720);
@@ -87,4 +104,33 @@ public class Main extends JFrame
 			}
 		}
 	}
+}
+
+//Class for audio player
+class AudioPlayer
+{
+    AudioInputStream audioInputStream;
+    Clip clip;
+
+    public AudioPlayer(int track)
+        throws UnsupportedAudioFileException, IOException, LineUnavailableException 
+    {
+        // create AudioInputStream object
+        audioInputStream = 
+                AudioSystem.getAudioInputStream(new File("photon_tracks/Track0" + track + ".wav").getAbsoluteFile());
+        
+        // create clip reference
+        clip = AudioSystem.getClip();
+        
+        // open audioInputStream to the clip
+        clip.open(audioInputStream);
+        
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    }
+
+    public void play() 
+    {
+        //start the clip
+        clip.start();
+    }
 }
