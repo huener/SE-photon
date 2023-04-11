@@ -3,8 +3,8 @@ import java.sql.*;
 //final in order to prevent extensions of the class
 public final class Data
 {
-    Player teamGreen[] = new Player[20];
-    Player teamRed[] = new Player[20];
+    Player teamGreen[] = new Player[15];
+    Player teamRed[] = new Player[15];
     static Connection con;
     static Statement st;
     //initializes the data class to the database. creates connection and statement class variables which will be used in all other methods
