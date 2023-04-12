@@ -31,7 +31,6 @@ public class Main extends JFrame
 			e.printStackTrace();
 			System.exit(1);
 		}
-		audio.play();
 		
 		// JFrame window customization
 		this.setTitle("Photon Laser Tag Simulation (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧");
@@ -47,6 +46,7 @@ public class Main extends JFrame
         splashScreen();	// draw splash screen and sleep before text boxes are created
 
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
+		view.addClip(audio.clip); // passes the audio in to view so it can play when a game starts
 
 		view.startGUI(controller);
 		view.createPlayerEntryScreen(controller);
@@ -126,6 +126,7 @@ class AudioPlayer
         clip.open(audioInputStream);
         
         clip.loop(Clip.LOOP_CONTINUOUSLY);
+	clip.stop();
     }
 
     public void play() 
