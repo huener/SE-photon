@@ -22,10 +22,14 @@ import java.awt.Dimension;
 import java.awt.ComponentOrientation;
 // import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
+import javax.sound.sampled.*;
 
 class View extends JPanel
 {
 	Data data;
+
+	//audio player to play when needed
+	Clip clip;
 
 	//Splash Screen
 	BufferedImage splash_image;
@@ -548,6 +552,11 @@ class View extends JPanel
 				s1.setOrientation(SwingConstants.VERTICAL);
 				this.botActionPanel.add(s1);
 			}
+
+			void addClip(Clip a)
+			{
+				this.clip = a;
+			}
    	// --------------------------------------------------------------------------
 
 
@@ -592,6 +601,7 @@ class View extends JPanel
 					}
                 });
                 timer.setInitialDelay(0);
+				clip.start();
                 timer.start();
 
 			countDown=3;
