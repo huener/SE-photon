@@ -22,10 +22,14 @@ import java.awt.Dimension;
 import java.awt.ComponentOrientation;
 // import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
+import javax.sound.sampled.*;
 
 class View extends JPanel
 {
 	Data data;
+	
+	// audio player to play when needed
+    	Clip clip;
 
 	//Splash Screen
 	BufferedImage splash_image;
@@ -67,7 +71,6 @@ class View extends JPanel
     	JTextArea greenPlayerScores[] = new JTextArea[6];
 
 	// total team scores
-    	// temp??
     	int redTotal = 0;
     	int greenTotal = 0;
 	int top5RedPlayerIndexes[] = new int[5];
@@ -122,15 +125,29 @@ class View extends JPanel
                 	top5GameActionUpdate();
 
                 	// testing new top5 update method
-                	if(updatetest < 25) {
+                	if(updatetest < 100) {
                     		updatetest ++;
                     		//System.out.println("updatetest: " + updatetest);
                 	}
             	}
             	// testing new top5 update method
+		// REMOVE WHEN TRAFFIC GENERATOR IS WORKING!
             	if(updatetest == 25) {
                 	testTopActionScreen2();
                 	updatetest ++;
+            	}
+		if(updatetest == 50) {
+                	data.teamRed[top5RedPlayerIndexes[2]].score += 55;
+                	updatetest++;
+            	}
+            	if(updatetest == 75) {
+                	data.teamGreen[top5GreenPlayerIndexes[1]].score += 34;
+                	updatetest++;
+            	}
+            	if(updatetest == 100) {
+                	data.teamGreen[9].codename = "Roger";
+                	data.teamGreen[9].score = 90;
+                	updatetest++;
             	}
 
 	}
@@ -514,7 +531,59 @@ class View extends JPanel
         	}
     	}
 	
-	// update the top 5 text fields during gameplay
+	// update the top5 display text and make top scores flash during gameplay
+        void top5DisplayUpdate() {
+            	// top scores are normal color
+            	redPlayerScores[5].setForeground(Color.RED);
+            	redPlayerNames[0].setForeground(Color.RED);
+            	redPlayerScores[0].setForeground(Color.RED);
+            	greenPlayerScores[5].setForeground(Color.GREEN);
+            	greenPlayerNames[0].setForeground(Color.GREEN);
+            	greenPlayerScores[0].setForeground(Color.GREEN);
+
+            	// sets how quickly the text flashes
+            	blink = (blink + 1) % 10;
+
+            	if(blink == 0) {
+                	// set top scores of top team to black text to make it "flash"
+                	if(redTotal > greenTotal) {
+                    		redPlayerScores[5].setForeground(Color.BLACK);
+                	}
+                	else if(redTotal == greenTotal) { 
+                    		// NO flashing if scores are equivalent
+                	}
+               		else {
+                    		greenPlayerScores[5].setForeground(Color.BLACK);
+                	}
+
+                	if(data.teamRed[top5RedPlayerIndexes[0]].score > data.teamGreen[top5GreenPlayerIndexes[0]].score) {
+                    		redPlayerNames[0].setForeground(Color.BLACK);
+                    		redPlayerScores[0].setForeground(Color.BLACK);
+                	}
+                	else if(data.teamRed[top5RedPlayerIndexes[0]].score == data.teamGreen[top5GreenPlayerIndexes[0]].score) { 
+                    		// NO flashing if scores are equivalent
+                	}
+                	else {
+                    		greenPlayerNames[0].setForeground(Color.BLACK);
+                    		greenPlayerScores[0].setForeground(Color.BLACK);
+                	}
+            	}
+
+            	for(int i = 0; i < redPlayerNames.length - 1; i++) {
+                	redPlayerNames[i].setText(data.teamRed[top5RedPlayerIndexes[i]].codename);
+                	redPlayerScores[i].setText("" + data.teamRed[top5RedPlayerIndexes[i]].score);
+            	}
+            	for(int i = 0; i < greenPlayerNames.length - 1; i++) {
+                	greenPlayerNames[i].setText(data.teamGreen[top5GreenPlayerIndexes[i]].codename);
+                	greenPlayerScores[i].setText("" + data.teamGreen[top5GreenPlayerIndexes[i]].score);
+            	}
+
+            	redPlayerScores[5].setText("" + redTotal);
+            	greenPlayerScores[5].setText("" + greenTotal);
+        }
+	
+	// update cumulative team scores, update which players are considered "top 5"
+        // call display update method
         void top5GameActionUpdate() {
 	        
         	// update total scores
@@ -527,130 +596,85 @@ class View extends JPanel
                 	greenTotal += data.teamGreen[i].score;
             	}
             
-            	// sets how quickly the text flashes
-            	blink = (blink + 1) % 10;
-
-           	// top scores are normal color
-            	redPlayerScores[5].setForeground(Color.RED);
-            	redPlayerNames[0].setForeground(Color.RED);
-            	redPlayerScores[0].setForeground(Color.RED);
-            	greenPlayerScores[5].setForeground(Color.GREEN);
-            	greenPlayerNames[0].setForeground(Color.GREEN);
-            	greenPlayerScores[0].setForeground(Color.GREEN);
-
-            	if(blink == 0) {
-                	// set top scores of top team to black text to make it "flash"
-                	if(redTotal > greenTotal) {
-                    		redPlayerScores[5].setForeground(Color.BLACK);
-                    		redPlayerNames[0].setForeground(Color.BLACK);
-                    		redPlayerScores[0].setForeground(Color.BLACK);
-                	}
-                	else if(redTotal == greenTotal) { // top scores of both teams flash if top scores are equivalent
-                    		redPlayerScores[5].setForeground(Color.BLACK);
-                    		redPlayerNames[0].setForeground(Color.BLACK);
-                    		redPlayerScores[0].setForeground(Color.BLACK);
-                    		greenPlayerScores[5].setForeground(Color.BLACK);
-                    		greenPlayerNames[0].setForeground(Color.BLACK);
-                    		greenPlayerScores[0].setForeground(Color.BLACK);
-                	}
-                	else {
-                    		greenPlayerScores[5].setForeground(Color.BLACK);
-                    		greenPlayerNames[0].setForeground(Color.BLACK);
-                    		greenPlayerScores[0].setForeground(Color.BLACK);
-                	}
-            	}
-
-            
             	// update players in top score area
             	// update top5 red team display
             	for(int i = 0; i < data.teamRed.length; i++) {
                 	boolean same = false;
-			// ignore if index is already in the top 5 list
-                	for(int k = 0; k < 5; k++) {
-                    		if(i == top5RedPlayerIndexes[k]) {
-                        		same = true;
+
+                	int lowerbound = 7;
+                	for(int b = 0; b < 5; b++) {
+                    		if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[b]].score) {
+                        		if(i == top5RedPlayerIndexes[b]) {
+                            			same = true;
+                            			break;
+                        		}
+                        		lowerbound = b;
+                        		break;
                     		}
                 	}
                 	if(same) {
                     		continue;
                 	}
-                
-                	int lowerbound = 7;
-                	if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[0]].score) {
-                    		lowerbound = 0;
-                	}
-                	else if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[1]].score) {
-                    		lowerbound = 1;
-                	}
-                	else if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[2]].score) {
-                    		lowerbound = 2;
-                	}
-                	else if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[3]].score) {
-                    		lowerbound = 3;
-                	}
-                	else if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[4]].score) {
-                    		lowerbound = 4;
-                	}
 
+
+                	int sameIndex = 4; // defaults to 4, the last position in the top5 list
                 	if(lowerbound <= 4) {
-                    		for(int j = 4; j > lowerbound; j--) {
-                        		top5RedPlayerIndexes[j] = top5RedPlayerIndexes[j - 1];
+                    		// check for current position in top5 list (or check if it's even there)
+                    		for(int k = 0; k < 5; k++) {
+                        		if(i == top5GreenPlayerIndexes[k]) {
+                            			sameIndex = k;
+                        		}
                     		}
+
+				// shift list down to make room for new player 
+                    		// if #3 is moving to #1 spot, only shifts player #1 and player #2 down
+                    		// if player isn't already in the 5top list, shift the ENTIRE list down by 1
+                    		for(int j = sameIndex; j > lowerbound; j--) {
+                        		top5RedPlayerIndexes[j] = top5RedPlayerIndexes[j - 1];
+                    		}  
                     		top5RedPlayerIndexes[lowerbound] = i;
                 	}
-
             	}
             	// update top5 green team display
             	for(int i = 0; i < data.teamGreen.length; i++) {
                 	boolean same = false;
-			// ignore if index is already in the top 5 list
-                	for(int k = 0; k < 5; k++) {
-                    		if(i == top5GreenPlayerIndexes[k]) {
-                        		same = true;
+                	int lowerbound = 7;
+                	for(int b = 0; b < 5; b++) {
+                    		if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[b]].score) {
+                        		if(i == top5GreenPlayerIndexes[b]) {
+                            			same = true;
+                            			break;
+                        		}
+                        		lowerbound = b;
+                        		break;
                     		}
                 	}
                 	if(same) {
                     		continue;
                 	}
 
-                	int lowerbound = 7;
-                	if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[0]].score) {
-                    		lowerbound = 0;
-                	}
-                	else if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[1]].score) {
-                    		lowerbound = 1;
-                	}
-                	else if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[2]].score) {
-                    		lowerbound = 2;
-                	}
-                	else if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[3]].score) {
-                    		lowerbound = 3;
-                	}
-                	else if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[4]].score) {
-                    		lowerbound = 4;
-                	}
-
+                	int sameIndex = 4;
                 	if(lowerbound <= 4) {
-                    		for(int j = 4; j > lowerbound; j--) {
+                    		// check for current position in top5 list (or check if it's even there)
+                    		for(int k = 0; k < 5; k++) {
+                        		if(i == top5GreenPlayerIndexes[k]) {
+                            			sameIndex = k;
+                        		}
+                    		}
+
+                    		// shift list down to make room for new player 
+                    		// if #3 is moving to #1 spot, only shifts player #1 and player #2 down
+                    		// if player isn't already in the 5top list, shift the ENTIRE list down by 1
+                    		for(int j = sameIndex; j > lowerbound; j--) {
                         		top5GreenPlayerIndexes[j] = top5GreenPlayerIndexes[j - 1];
                     		}
                     		top5GreenPlayerIndexes[lowerbound] = i;
+                    
                 	}
             	}
             
-	    	// update top-action-screen text
-            	for(int i = 0; i < redPlayerNames.length - 1; i++) {
-                	redPlayerNames[i].setText(data.teamRed[top5RedPlayerIndexes[i]].codename);
-                	redPlayerScores[i].setText("" + data.teamRed[top5RedPlayerIndexes[i]].score);
-            	}
-	    	for(int i = 0; i < greenPlayerNames.length - 1; i++) {
-                	greenPlayerNames[i].setText(data.teamGreen[top5GreenPlayerIndexes[i]].codename);
-                	greenPlayerScores[i].setText("" + data.teamGreen[top5GreenPlayerIndexes[i]].score);
-            	}
-		
-	    	// update displayed totals
-            	redPlayerScores[5].setText("" + redTotal);
-            	greenPlayerScores[5].setText("" + greenTotal);
+	    	// update the display text, make top scores flash
+            	top5DisplayUpdate();
         }
 	
 	
@@ -719,7 +743,11 @@ class View extends JPanel
 				this.botActionPanel.add(s1);
 			}
 
-
+	void addClip(Clip a)
+	{
+		this.clip = a;
+	}
+	
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{
@@ -758,6 +786,7 @@ class View extends JPanel
 						//THIS LINE STARTS THE GAME SCREEN
 						mainPanelCards.show(mainPanel, "actionPanel");
 						beforeGameActionUpdate();
+						clip.start();
 						gameActive = true;
 					}
                 });
