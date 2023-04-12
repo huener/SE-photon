@@ -533,16 +533,19 @@ class View extends JPanel
 	
 	// update the top5 display text and make top scores flash during gameplay
         void top5DisplayUpdate() {
-            	// top scores are normal color
-            	redPlayerScores[5].setForeground(Color.RED);
-            	redPlayerNames[0].setForeground(Color.RED);
-            	redPlayerScores[0].setForeground(Color.RED);
-            	greenPlayerScores[5].setForeground(Color.GREEN);
-            	greenPlayerNames[0].setForeground(Color.GREEN);
-            	greenPlayerScores[0].setForeground(Color.GREEN);
-
             	// sets how quickly the text flashes
-            	blink = (blink + 1) % 10;
+            	blink = (blink + 1) % 20;
+		
+		// makes the blink slower / less jarring
+		if(blink % 10 == 0) {
+			// top scores are normal color
+            		redPlayerScores[5].setForeground(Color.RED);
+            		redPlayerNames[0].setForeground(Color.RED);
+            		redPlayerScores[0].setForeground(Color.RED);
+            		greenPlayerScores[5].setForeground(Color.GREEN);
+            		greenPlayerNames[0].setForeground(Color.GREEN);
+            		greenPlayerScores[0].setForeground(Color.GREEN);
+		}
 
             	if(blink == 0) {
                 	// set top scores of top team to black text to make it "flash"
