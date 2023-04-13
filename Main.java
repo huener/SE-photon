@@ -16,11 +16,12 @@ public class Main extends JFrame
 	Controller controller = new Controller(data);
 	View view = new View(controller, data);
 	AudioPlayer audio;
+	
+	Runnable traffic;
+	Thread trafficThread;
 
-
-	public Main()
+	public Main() throws IOException
 	{
-
 		//initialize sound
 		int trackSelect = (int)(Math.random()*8 + 1);	//random track
 		System.out.println("Playing track: " + trackSelect);
@@ -56,6 +57,11 @@ public class Main extends JFrame
 
 		//INITIALIZES DATA, IF YOU WANT TO INITIALIZE DATA SOMEWHERE ELSE THEN THIS IS THE LINE YOU NEED
 		Data.initializeData("jdbc:postgresql://[db.fbfwczzgqtvrtlenozdg.supabase.co]:5432/postgres", "postgres", "A4Nx57ExIC3EesGw");
+		
+		// INITIALIZE TRAFFIC THREAD
+		Runnable traffic = new trafficServer(data, view, controller);
+		Thread trafficThread = new Thread(traffic);
+		trafficThread.start();
 	}
 
     	void splashScreen()
@@ -78,7 +84,7 @@ public class Main extends JFrame
 	}
 
 	//MAIN PROGRAM:: the actual code that is ran on start
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
         	Main instance = new Main();
 		instance.run();	//actually runs the game
