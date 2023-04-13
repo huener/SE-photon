@@ -112,7 +112,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	{
 		char[] name = ((e.getComponent()).getName()).toCharArray();
 		char team = name[1];
-		// char field = name[0];
 
 		String indexStr = "";
 		int index = 0;
@@ -151,8 +150,9 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		{
 			try
 			{
-				if(prevFocus.playerID != Integer.parseInt(prevFocus.idField.getText()))
-				prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
+				if(prevFocus.playerID != Integer.parseInt(prevFocus.idField.getText())) {
+					prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
+				}
 			}
 			catch(Exception x)
 			{
@@ -179,6 +179,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	// When something changes between the focus, keyboard, or mode selectors, this is where it goes.
 	void update()
 	{
+		editTextFields(editMode);
 		if (editMode && (view.splash == true))
 		{
 			// enable editing the text fields and database querying upon player focus loss
@@ -186,10 +187,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 			try
 			{
-				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename != ""))
+				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename.charAt(0) != 0))
 				{
-
-
 					System.out.println("Sending player info to database: " + prevFocus.playerID + " | " + prevFocus.codename);
 					Data.insertPlayer(prevFocus.playerID, prevFocus.codename);
 
@@ -201,11 +200,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				System.out.println("Non-player field focused...");
 				prevFocus = focus;
 			}
-		}
-		else
-		{
-			// disable text field editing
-			editTextFields(false);
 		}
 	}
 
