@@ -277,9 +277,9 @@ class View extends JPanel
 		mainPanelCards.addLayoutComponent(entryPanel, "entryPanel");
 		mainPanel.add(entryPanel);
 
-		// this sets the very first focus so tab always has somewhere to go
-		data.teamRed[0].idField.requestFocusInWindow();
-		data.teamRed[0].idField.setFocusCycleRoot(true);
+		// this sets the very last focus so tab always has somewhere to go
+		data.teamGreen[14].nameField.requestFocusInWindow();
+		data.teamGreen[14].nameField.setFocusCycleRoot(true)
 	}
 
 	//function to create action screen, will only create it once but pull it up each time we switch
@@ -789,11 +789,12 @@ class View extends JPanel
 						//THIS LINE STARTS THE GAME SCREEN
 						mainPanelCards.show(mainPanel, "actionPanel");
 						beforeGameActionUpdate();
-						clip.start();
+						
 						gameActive = true;
 					}
                 });
                 timer.setInitialDelay(0);
+		clip.start();
                 timer.start();
 
 			countDown=3;
