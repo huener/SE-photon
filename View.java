@@ -401,7 +401,7 @@ class View extends JPanel
             		teamnames[i].setSize(new Dimension(300, 40));
 		    	teamnames[i].setBackground(Color.BLACK);
 		    	teamnames[i].setEditable(false);
-		    	teamnames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+		    	teamnames[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 20));
         	}
         	// set text color
         	teamnames[0].setForeground(Color.RED);
@@ -442,8 +442,8 @@ class View extends JPanel
 			redPlayerNames[i].setMaximumSize(new Dimension(300, 35));
             		redPlayerScores[i].setMaximumSize(new Dimension(125, 35));
 
-            		redPlayerNames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
-            		redPlayerScores[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+            		redPlayerNames[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
+            		redPlayerScores[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
 
             		// testing text
             		//redPlayerNames[i].setText("samplePlayer" + i);
@@ -491,8 +491,8 @@ class View extends JPanel
             		greenPlayerNames[i].setMaximumSize(new Dimension(300, 35));
             		greenPlayerScores[i].setMaximumSize(new Dimension(125, 35));
 
-            		greenPlayerNames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
-            		greenPlayerScores[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+            		greenPlayerNames[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
+            		greenPlayerScores[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
 
            		// testing text
             		//greenPlayerNames[i].setText("samplePlayer" + i);
