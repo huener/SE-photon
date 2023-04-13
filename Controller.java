@@ -179,6 +179,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	// When something changes between the focus, keyboard, or mode selectors, this is where it goes.
 	void update()
 	{
+		editTextFields(editMode);
 		if (editMode && (view.splash == true))
 		{
 			// enable editing the text fields and database querying upon player focus loss
@@ -198,11 +199,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				System.out.println("Non-player field focused...");
 				prevFocus = focus;
 			}
-		}
-		else
-		{
-			// disable text field editing
-			editTextFields(false);
 		}
 	}
 
