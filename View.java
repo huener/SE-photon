@@ -78,8 +78,6 @@ class View extends JPanel
         int blink = 0;
         boolean gameActive = false;
 
-        int updatetest = 0;
-
     	View(Controller c, Data d)
 	{
 		mainPanelCards = new CardLayout();
@@ -123,33 +121,7 @@ class View extends JPanel
 		if(gameActive) {
                 	// while game is active, update the top5 score panels
                 	top5GameActionUpdate();
-
-                	// testing new top5 update method
-                	if(updatetest < 100) {
-                    		updatetest ++;
-                    		//System.out.println("updatetest: " + updatetest);
-                	}
             	}
-            	// testing new top5 update method
-		// REMOVE WHEN TRAFFIC GENERATOR IS WORKING!
-            	if(updatetest == 25) {
-                	testTopActionScreen2();
-                	updatetest ++;
-            	}
-		if(updatetest == 50) {
-                	data.teamRed[top5RedPlayerIndexes[2]].score += 55;
-                	updatetest++;
-            	}
-            	if(updatetest == 75) {
-                	data.teamGreen[top5GreenPlayerIndexes[1]].score += 34;
-                	updatetest++;
-            	}
-            	if(updatetest == 100) {
-                	data.teamGreen[9].codename = "Roger";
-                	data.teamGreen[9].score = 90;
-                	updatetest++;
-            	}
-
 	}
 
 	void startGUI(Controller c)
@@ -385,10 +357,12 @@ class View extends JPanel
         	createTeamNamePanel();
         	createActionRedTeam();
         	createActionGreenTeam();
-		// set top 5 players to the first 5 players
+		// set top 5 players to the last position
+        	// will be changed before the game starts if there are 5+ players
+        	// otherwise extra slots will be set to an empty player object
             	for(int i = 0; i < 5; i++) {
-                	top5RedPlayerIndexes[i] = i;
-                	top5GreenPlayerIndexes[i] = i;
+                	top5RedPlayerIndexes[i] = 15;
+                	top5GreenPlayerIndexes[i] = 15;
             	}
     	}
 
@@ -517,18 +491,52 @@ class View extends JPanel
     	// sets topActionScreen textboxes to info for first 5 players of each team
     	// probably shouldn't be used during a game - no score check set up yet
     	void beforeGameActionUpdate() {
-        	for(int i = 0; i < redPlayerNames.length; i++) {
-            		redPlayerNames[i].setText(data.teamRed[i].codename);
-            		if(data.teamRed[i].codename != "") {
-                		redPlayerScores[i].setText("" + data.teamRed[i].score);
-            		}
+        	int j = 0;
+
+            	int redTeamEmptyPlayer = -1;
+            	int greenTeamEmptyPlayer = -1;
+
+            	// setup so top 5 (or all, if less than 5) players show on the top5 display
+
+            	for(int i = 0; i < data.teamRed.length; i++) {
+                	if((data.teamRed[i].codename != "") && (redTeamEmptyPlayer == -1)) {
+                    		redTeamEmptyPlayer = i;
+                	}
+                	if((data.teamRed[i].codename != "") && (j < 5)) {
+                    		top5RedPlayerIndexes[j] = i;
+                    		//System.out.println("index " + j + " is player " + i);
+                    		j++;
+                	}
         	}
-        	for(int i = 0; i < greenPlayerNames.length; i++) {
-            		greenPlayerNames[i].setText(data.teamGreen[i].codename);
-            		if(data.teamGreen[i].codename != "") {
-                		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
-            		}
+
+            	j = 0;
+        	for(int i = 0; i < data.teamGreen.length; i++) {
+                	if((data.teamGreen[i].codename == "") && (greenTeamEmptyPlayer == -1)) {
+                    		greenTeamEmptyPlayer = i;
+                	}
+                	if((data.teamGreen[i].codename != "") && (j < 5)) {
+                    		top5GreenPlayerIndexes[j] = i;
+                    		//System.out.println("index " + j + " is player " + i);
+                    		j++;
+                	}
         	}
+
+            	for(int i = 0; i < 5; i++) {
+                	if(top5RedPlayerIndexes[i] == 15) { // if there weren't enough players to initialize all 5 indexes
+                    		// set to the first nonexistent player found
+                    		top5RedPlayerIndexes[i] = redTeamEmptyPlayer;
+                    		// if there aren't enough players to fill all 5 spots, 
+                    		// set text color of empty top 5 positions to black
+                    		redPlayerNames[i].setForeground(Color.BLACK);
+                    		redPlayerScores[i].setForeground(Color.BLACK);
+                	}
+                	if(top5GreenPlayerIndexes[i] == 15) { // if there weren't enough players to initialize all 5 indexes
+                    		// set to the first nonexistent player found
+                   		top5GreenPlayerIndexes[i] = greenTeamEmptyPlayer;
+                    		greenPlayerNames[i].setForeground(Color.BLACK);
+                    		greenPlayerScores[i].setForeground(Color.BLACK);
+                	}
+            	}
     	}
 	
 	// update the top5 display text and make top scores flash during gameplay
@@ -603,6 +611,10 @@ class View extends JPanel
             	// update top5 red team display
             	for(int i = 0; i < data.teamRed.length; i++) {
                 	boolean same = false;
+			
+			if(data.teamRed[i].codename == "") {
+                    		continue;
+                	}
 
                 	int lowerbound = 7;
                 	for(int b = 0; b < 5; b++) {
@@ -624,7 +636,7 @@ class View extends JPanel
                 	if(lowerbound <= 4) {
                     		// check for current position in top5 list (or check if it's even there)
                     		for(int k = 0; k < 5; k++) {
-                        		if(i == top5GreenPlayerIndexes[k]) {
+                        		if(i == top5RedPlayerIndexes[k]) {
                             			sameIndex = k;
                         		}
                     		}
@@ -641,6 +653,11 @@ class View extends JPanel
             	// update top5 green team display
             	for(int i = 0; i < data.teamGreen.length; i++) {
                 	boolean same = false;
+			
+			if(data.teamGreen[i].codename == "") {
+                    		continue;
+                	}
+			
                 	int lowerbound = 7;
                 	for(int b = 0; b < 5; b++) {
                     		if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[b]].score) {
