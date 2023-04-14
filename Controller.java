@@ -39,7 +39,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	//
 	//KeyListener methods
 	public void keyPressed(KeyEvent e)	{	}
-	public void keyTyped(KeyEvent e)	{	}
+	public void keyTyped(KeyEvent e)  {   }
 	public void keyReleased(KeyEvent e)
 	{
 		switch(e.getKeyCode())
@@ -112,8 +112,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	{
 		char[] name = ((e.getComponent()).getName()).toCharArray();
 		char team = name[1];
-		// char field = name[0];
-
+		
 		String indexStr = "";
 		int index = 0;
 		for(int i = 2; i < name.length; i++)
@@ -133,7 +132,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		char[] name = ((e.getComponent()).getName()).toCharArray();
 		char team = name[1];
 		char field = name[0];
-
 		String indexStr = "";
 		int index = 0;
 		for(int i = 2; i < name.length; i++)
@@ -141,18 +139,22 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			indexStr = indexStr + name[i];
 			index = Integer.parseInt(indexStr);
 		}
-
 		if (team == 'R')
+		{
 			prevFocus = data.teamRed[index];
+		}
 		else
+		{
 			prevFocus = data.teamGreen[index];
-
+		}
 		if(field == 'I')
 		{
 			try
 			{
 				if(prevFocus.playerID != Integer.parseInt(prevFocus.idField.getText()))
-				prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
+				{
+					prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
+				}
 			}
 			catch(Exception x)
 			{
@@ -172,13 +174,12 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	//
 	// TODO: MouseListener functions for bottomNavBar functionality
 
-
-
 	//
 	// This code is called every time the controller is updated, which is specified by the framelimiter in main.java
 	// When something changes between the focus, keyboard, or mode selectors, this is where it goes.
 	void update()
 	{
+		editTextFields(editMode);
 		if (editMode && (view.splash == true))
 		{
 			// enable editing the text fields and database querying upon player focus loss
@@ -186,13 +187,10 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 			try
 			{
-				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename != ""))
+				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename.charAt(0) != 0))
 				{
-
-
 					System.out.println("Sending player info to database: " + prevFocus.playerID + " | " + prevFocus.codename);
 					Data.insertPlayer(prevFocus.playerID, prevFocus.codename);
-
 					prevFocus = focus;
 				}
 			}
@@ -201,11 +199,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				System.out.println("Non-player field focused...");
 				prevFocus = focus;
 			}
-		}
-		else
-		{
-			// disable text field editing
-			editTextFields(false);
 		}
 	}
 
