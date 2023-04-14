@@ -337,11 +337,6 @@ class View extends JPanel
         	this.playerInfoPanel.add(actionPlayerColumns[0]);
         	this.playerInfoPanel.add(actionPlayerColumns[1]);
 
-        	JTextArea spacing2 = new JTextArea();
-        	spacing2.setMaximumSize(new Dimension(70, 200));
-        	spacing2.setBackground(Color.black);
-        	playerInfoPanel.add(spacing2);
-
         	this.playerInfoPanel.add(actionPlayerColumns[2]);
         	this.playerInfoPanel.add(actionPlayerColumns[3]);
 
@@ -383,7 +378,7 @@ class View extends JPanel
         	// set text
         	teamnames[0].setText("RED TEAM");
         	// textbox for spacing
-        	teamnames[1].setText("                                                     ");
+        	teamnames[1].setText("                                        ");
         	teamnames[2].setText("GREEN TEAM");
         	// add to panel
         	this.teamNamePanel.add(teamnames[0]);
@@ -401,9 +396,6 @@ class View extends JPanel
 		{
             		redPlayerNames[i] = new JTextArea();
             		redPlayerScores[i] = new JTextArea();
-
-            		// text boxes for scores have right alignment instead of left
-            		redPlayerScores[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
 			redPlayerNames[i].setEditable(false);
 			redPlayerNames[i].setForeground(Color.RED);
@@ -449,9 +441,6 @@ class View extends JPanel
 		{
             		greenPlayerNames[i] = new JTextArea();
             		greenPlayerScores[i] = new JTextArea();
-
-            		// text boxes for scores have right alignment instead of left
-            		greenPlayerScores[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
             		greenPlayerNames[i].setEditable(false);
 			greenPlayerNames[i].setForeground(Color.GREEN);
@@ -499,7 +488,7 @@ class View extends JPanel
             	// setup so top 5 (or all, if less than 5) players show on the top5 display
 
             	for(int i = 0; i < data.teamRed.length; i++) {
-                	if((data.teamRed[i].codename != "") && (redTeamEmptyPlayer == -1)) {
+                	if((data.teamRed[i].codename == "") && (redTeamEmptyPlayer == -1)) {
                     		redTeamEmptyPlayer = i;
                 	}
                 	if((data.teamRed[i].codename != "") && (j < 5)) {
@@ -527,13 +516,11 @@ class View extends JPanel
                     		top5RedPlayerIndexes[i] = redTeamEmptyPlayer;
                     		// if there aren't enough players to fill all 5 spots, 
                     		// set text color of empty top 5 positions to black
-                    		redPlayerNames[i].setForeground(Color.BLACK);
                     		redPlayerScores[i].setForeground(Color.BLACK);
                 	}
                 	if(top5GreenPlayerIndexes[i] == 15) { // if there weren't enough players to initialize all 5 indexes
                     		// set to the first nonexistent player found
                    		top5GreenPlayerIndexes[i] = greenTeamEmptyPlayer;
-                    		greenPlayerNames[i].setForeground(Color.BLACK);
                     		greenPlayerScores[i].setForeground(Color.BLACK);
                 	}
             	}
@@ -582,15 +569,23 @@ class View extends JPanel
 
             	for(int i = 0; i < redPlayerNames.length - 1; i++) {
                 	redPlayerNames[i].setText(data.teamRed[top5RedPlayerIndexes[i]].codename);
-                	redPlayerScores[i].setText("" + data.teamRed[top5RedPlayerIndexes[i]].score);
+                	String scoreSample = "" + data.teamRed[top5RedPlayerIndexes[i]].score;
+			scoreSample = String.format("%24.24s", scoreSample);
+			redPlayerScores[i].setText(scoreSample);
             	}
             	for(int i = 0; i < greenPlayerNames.length - 1; i++) {
                 	greenPlayerNames[i].setText(data.teamGreen[top5GreenPlayerIndexes[i]].codename);
-                	greenPlayerScores[i].setText("" + data.teamGreen[top5GreenPlayerIndexes[i]].score);
+                	String scoreSample2 = "" + data.teamGreen[top5GreenPlayerIndexes[i]].score;
+			scoreSample2 = String.format("%24.24s", scoreSample2);
+			greenPlayerScores[i].setText(scoreSample2);
             	}
 
-            	redPlayerScores[5].setText("" + redTotal);
-            	greenPlayerScores[5].setText("" + greenTotal);
+            	String scoreSample = "" + redTotal;
+		scoreSample = String.format("%24.24s", scoreSample);
+		String scoreSample2 = "" + greenTotal;
+		scoreSample2 = String.format("%24.24s", scoreSample2);
+            	redPlayerScores[5].setText(scoreSample);
+            	greenPlayerScores[5].setText(scoreSample2);
         }
 	
 	// update cumulative team scores, update which players are considered "top 5"
