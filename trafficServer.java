@@ -65,8 +65,11 @@ public class trafficServer implements Runnable
 					}
 					if(d.teamRed[i].playerID == loser)
 					{
-						d.teamRed[i].score -= 10;
-						System.out.println("Red " + d.teamRed[i].codename + " -10");
+						if (d.teamRed[i].score > 0)
+						{
+							d.teamRed[i].score -= 10;
+							System.out.println("Red " + d.teamRed[i].codename + " -10");
+						}
 					}
 				}
 				
@@ -79,14 +82,16 @@ public class trafficServer implements Runnable
 					}
 					if(d.teamGreen[i].playerID == loser)
 					{
-						d.teamGreen[i].score -= 10;
-						System.out.println("Green " + d.teamGreen[i].codename + " -10");
+
+						if (d.teamGreen[i].score > 0)
+						{
+							d.teamGreen[i].score -= 10;
+							System.out.println("Green " + d.teamGreen[i].codename + " -10");
+						}
 					}
 				}
 
 			}
-
-
 
 			// Exit the server if the client sends "bye"
 			if (data(receive).toString().equals("bye"))
