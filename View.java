@@ -118,6 +118,10 @@ class View extends JPanel
             	g.drawImage(splash_image, 0, 0, null);
             	//splash = true;
         	}
+		if(gameActive) {
+                	// while game is active, update the top5 score panels
+                	top5GameActionUpdate();
+            	}
 
 
 	}
@@ -800,6 +804,8 @@ class View extends JPanel
 						//THIS LINE STARTS THE GAME SCREEN
 						mainPanelCards.show(mainPanel, "actionPanel");
 						beforeGameActionUpdate();
+						
+						gameActive = true;
 					}
                 });
                 timer.setInitialDelay(0);
