@@ -1,5 +1,5 @@
 import java.sql.*;
-//Handles database quearying and photon simulation 
+// Handles database quearying and photon simulation 
 //final in order to prevent extensions of the class
 public final class Data
 {
