@@ -71,9 +71,12 @@ class View extends JPanel
     	JTextArea greenPlayerScores[] = new JTextArea[6];
 
 	// total team scores
-    	// temp??
     	int redTotal = 0;
     	int greenTotal = 0;
+	int top5RedPlayerIndexes[] = new int[5];
+        int top5GreenPlayerIndexes[] = new int[5];
+        int blink = 0;
+        boolean gameActive = false;
 
     	View(Controller c, Data d)
 	{
