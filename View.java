@@ -251,7 +251,7 @@ class View extends JPanel
 
 		// this sets the very last focus so tab always has somewhere to go
 		data.teamGreen[14].nameField.requestFocusInWindow();
-		data.teamGreen[14].nameField.setFocusCycleRoot(true)
+		data.teamGreen[14].nameField.setFocusCycleRoot(true);
 	}
 
 	//function to create action screen, will only create it once but pull it up each time we switch
