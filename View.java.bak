@@ -2,6 +2,9 @@
 
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.BoxLayout;
@@ -9,30 +12,34 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
 import javax.swing.JTextField;
-// import java.awt.Insets;
+import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.border.Border; 
+import javax.swing.border.Border;
+// import javax.swing.text.FlowView;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.ComponentOrientation;
-import java.util.concurrent.TimeUnit;
+// import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
+import javax.sound.sampled.*;
 
 class View extends JPanel
 {
 	Data data;
 
+	//audio player to play when needed
+	Clip clip;
+
 	//Splash Screen
 	BufferedImage splash_image;
    	int splashFrames = 0;
     	boolean splash = false;
-		
+
 	//Timer Variables
-	int countDown = 3; //number from which we count down
+	int countDown = 30; //number from which we count down
 	Timer  timer;
-	int currentCount = 3;
-	boolean inCount = false;
+
 
 
 	//Panels Framework
@@ -44,8 +51,8 @@ class View extends JPanel
 
 	JPanel topActionPanel;
    	JPanel botActionPanel;
-    	JPanel timeActionPanel;
-	
+    JPanel timeActionPanel;
+
 	JPanel playerInfoPanel;
     	JPanel teamNamePanel;
     	JPanel actionPlayerColumns[] = new JPanel[4];
@@ -64,9 +71,12 @@ class View extends JPanel
     	JTextArea greenPlayerScores[] = new JTextArea[6];
 
 	// total team scores
-    	// temp??
     	int redTotal = 0;
     	int greenTotal = 0;
+	int top5RedPlayerIndexes[] = new int[5];
+        int top5GreenPlayerIndexes[] = new int[5];
+        int blink = 0;
+        boolean gameActive = false;
 
     	View(Controller c, Data d)
 	{
@@ -75,15 +85,15 @@ class View extends JPanel
 		data = d;
 		bottomText = new JTextField(50);
 		//initiating and sizing panels
-		titlePanel = new JPanel(); 
-		titlePanel.setMaximumSize(new Dimension(960, 50)); 
+		titlePanel = new JPanel();
+		titlePanel.setMaximumSize(new Dimension(960, 50));
 		titlePanel.setBackground(Color.black);
-		
-		mainPanel = new JPanel(); 
-		mainPanel.setLayout(mainPanelCards); 
-		mainPanel.setMaximumSize(new Dimension(960, 580)); 
+
+		mainPanel = new JPanel();
+		mainPanel.setLayout(mainPanelCards);
+		mainPanel.setMaximumSize(new Dimension(960, 580));
 		mainPanel.setBackground(Color.black);
-		
+
 		navPanel = new JPanel(); navPanel.setMaximumSize(new Dimension(960, 60)); navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS)); navPanel.setBackground(Color.black);
 		bottomPanel = new JPanel(); bottomPanel.setMaximumSize(new Dimension(960, 30));
 
@@ -93,8 +103,8 @@ class View extends JPanel
         	// loads the picture for the splash screen.
         	splash_image = loadImage("logo1.jpg");    // logo1.jpg is 960x623. Black background at the bottom
         	// of the window matches best.
-			
-		
+
+
 	}
     	// window size is set to 960 x 720 in main
 
@@ -103,13 +113,17 @@ class View extends JPanel
 		//background color
 		g.setColor(new Color(0, 0, 0));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        
+
         	if(splash == false) {
             	g.drawImage(splash_image, 0, 0, null);
             	//splash = true;
         	}
-			
-		
+		if(gameActive) {
+                	// while game is active, update the top5 score panels
+                	top5GameActionUpdate();
+            	}
+
+
 	}
 
 	void startGUI(Controller c)
@@ -146,7 +160,7 @@ class View extends JPanel
 				navBar[i].setBorder(BorderFactory.createCompoundBorder(border,
 					BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 			}
-            
+
 			// add to view (so they show up)
 			this.navPanel.add(navBar[i]);
 		}
@@ -155,11 +169,11 @@ class View extends JPanel
 		// so strings are formatted to be centered in the textbox
 		navBar[0].setText("         F1 \n        Edit \n      Game");
 		navBar[1].setText("         F2 \n      Game \n  Parameters");
-		navBar[2].setText("         F3 \n       Start \n      Game");
-		navBar[4].setText("         F5 \n  PreEntered \n     Games");
+		navBar[2].setText("         F3 \n        View \n      Game");
+		navBar[4].setText("         F5 \n       Start\n      Game");
 		navBar[6].setText("         F7");
-		navBar[7].setText("         F8 \n       View \n      Game");
-		navBar[9].setText("        F10 \n       Flick \n       Sync");
+		navBar[7].setText("         F8");
+		navBar[9].setText("        F10");
 		navBar[11].setText("        F12 \n       Clear \n      Game");
 	}
 
@@ -169,7 +183,7 @@ class View extends JPanel
 		JTextField bottomText = new JTextField(100);
 		bottomText.setEditable(false);
 		bottomText.setHorizontalAlignment(JTextField.CENTER);
-		bottomText.setText("<Del> to Delete Player, <Ins> to Manually Insert, or edit codename");
+		bottomText.setText(" Press F1 to toggle Edit Mode. Click the text boxes to enter a new player, move to another to save player. ");
 		bottomText.setFont(new java.awt.Font("Arial", Font.BOLD, 12));
 		this.bottomPanel.add(bottomText);
 	}
@@ -177,6 +191,7 @@ class View extends JPanel
 	//function call to create the PES
 	void createPlayerEntryScreen(Controller controller)
 	{
+		entryPanel.setLayout(null);
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
 			data.teamRed[i] = new Player("R" + i);
@@ -184,8 +199,8 @@ class View extends JPanel
 			entryPanel.add(data.teamRed[i].idField);
 			entryPanel.add(data.teamRed[i].nameField);
 
-			data.teamRed[i].idField.setBounds(150 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
-			data.teamRed[i].nameField.setBounds(225 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
+			data.teamRed[i].idField.setBounds(150 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamRed[i].idSize.width, data.teamRed[i].idSize.height);
+			data.teamRed[i].nameField.setBounds(225 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamRed[i].nameSize.width, data.teamRed[i].nameSize.height);
 			data.teamRed[i].idField.addKeyListener(controller);
 			data.teamRed[i].nameField.addKeyListener(controller);
 			data.teamRed[i].idField.addFocusListener(controller);
@@ -193,7 +208,7 @@ class View extends JPanel
 
 			//number labels
 			data.teamRed[i].playerNumText.setText("" + i);
-			data.teamRed[i].playerNumText.setBounds(130 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, 200, 20);
+			data.teamRed[i].playerNumText.setBounds(130 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, 200, 20);
 			data.teamRed[i].playerNumText.setFocusable(false);
 			entryPanel.add(data.teamRed[i].playerNumText);
 		}
@@ -203,8 +218,8 @@ class View extends JPanel
 			data.teamGreen[i] = new Player("G" + i);
 			entryPanel.add(data.teamGreen[i].idField);
 			entryPanel.add(data.teamGreen[i].nameField);
-			data.teamGreen[i].idField.setBounds(550 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
-			data.teamGreen[i].nameField.setBounds(625 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
+			data.teamGreen[i].idField.setBounds(550 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].idSize.width, data.teamGreen[i].idSize.height);
+			data.teamGreen[i].nameField.setBounds(625 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, data.teamGreen[i].nameSize.width, data.teamGreen[i].nameSize.height);
 			data.teamGreen[i].idField.addKeyListener(controller);
 			data.teamGreen[i].nameField.addKeyListener(controller);
 			data.teamGreen[i].idField.addFocusListener(controller);
@@ -212,7 +227,7 @@ class View extends JPanel
 
 			//number labels
 			data.teamGreen[i].playerNumText.setText("" + i);
-			data.teamGreen[i].playerNumText.setBounds(530 + entryPanel.getInsets().left, 75 + entryPanel.getInsets().top + 25*i, 200, 20);
+			data.teamGreen[i].playerNumText.setBounds(530 + entryPanel.getInsets().left, 50 + entryPanel.getInsets().top + 25*i, 200, 20);
 			data.teamGreen[i].playerNumText.setFocusable(false);
 			entryPanel.add(data.teamGreen[i].playerNumText);
 		}
@@ -220,7 +235,7 @@ class View extends JPanel
 		JTextArea redText = new JTextArea("RED TEAM");
 		redText.setForeground(Color.RED);
 		redText.setBackground(Color.BLACK);
-		redText.setBounds(entryPanel.getInsets().left + 220, entryPanel.getInsets().top + 40, 200, 20);
+		redText.setBounds(entryPanel.getInsets().left + 220, entryPanel.getInsets().top + 15, 200, 20);
 		redText.setEditable(false);
 		redText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
 		entryPanel.add(redText);
@@ -228,7 +243,7 @@ class View extends JPanel
 		JTextArea greenText = new JTextArea("GREEN TEAM");
 		greenText.setForeground(Color.GREEN);
 		greenText.setBackground(Color.BLACK);
-		greenText.setBounds(entryPanel.getInsets().left + 610, entryPanel.getInsets().top + 40, 200, 20);
+		greenText.setBounds(entryPanel.getInsets().left + 610, entryPanel.getInsets().top + 15, 200, 20);
 		greenText.setEditable(false);
 		greenText.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
 		entryPanel.add(greenText);
@@ -236,9 +251,9 @@ class View extends JPanel
 		mainPanelCards.addLayoutComponent(entryPanel, "entryPanel");
 		mainPanel.add(entryPanel);
 
-		// this sets the very first focus so tab always has somewhere to go
-		data.teamRed[0].idField.requestFocusInWindow();
-		data.teamRed[0].idField.setFocusCycleRoot(true);
+		// this sets the very last focus so tab always has somewhere to go
+		data.teamGreen[14].nameField.requestFocusInWindow();
+		data.teamGreen[14].nameField.setFocusCycleRoot(true);
 	}
 
 	//function to create action screen, will only create it once but pull it up each time we switch
@@ -253,15 +268,17 @@ class View extends JPanel
 		topActionPanel.addKeyListener(controller);
 		topActionPanel.setFocusable(true);
 		topActionPanel.setFocusTraversalKeysEnabled(false);
-		
+
 		// contains teamNamePanel and playerInfoPanel, y-axis layout so teamName is above playerInfo
 		topActionPanel.setLayout(new BoxLayout(topActionPanel, BoxLayout.Y_AXIS)); // changed from red to black to match example video
 		createTopActionPanel();
 
+		botActionPanel.setBackground(Color.black);
 		botActionPanel.addKeyListener(controller);
 		botActionPanel.setFocusable(true);
 		botActionPanel.requestFocus();
 		botActionPanel.setFocusTraversalKeysEnabled(false);
+		createTeamFeeds();
 
 		timeActionPanel.setBackground(Color.red);
 		timeActionPanel.addKeyListener(controller);
@@ -271,7 +288,7 @@ class View extends JPanel
 		mainPanelCards.addLayoutComponent(actionPanel, "actionPanel");
 		mainPanel.add(actionPanel);
 	}
-	
+
 	void createTimerScreen(){
 		timerPanel = new JPanel();
 		timerPanel = drawTimerImage(countDown);
@@ -279,59 +296,12 @@ class View extends JPanel
 		timerPanel.setBackground(Color.BLUE);
 		timerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
-		
+
 		mainPanelCards.addLayoutComponent(timerPanel, "timerPanel");
 		mainPanel.add(timerPanel);
 
 	}
-	//
-	//
-	//Start Countdown
-	//
-	//
 
-		void startCountDown(){
-			int waitTime = 2;
-			//pause between numbers (seconds)
-			//mainPanelCards.show(mainPanel, "timerPanel");
-			
-			timer = new Timer(1000, (e) -> {
-                   
-					System.out.println("count " + countDown);
-					timerPanel = drawTimerImage(countDown);
-					mainPanelCards.addLayoutComponent(timerPanel, "timerPanel"+countDown);
-					mainPanel.add(timerPanel);
-					mainPanelCards.show(mainPanel, "timerPanel"+countDown);
-                    
-					 countDown--;
-					 repaint();
-					if (countDown == -1) { // countdown finished
-						timer.stop(); // stop the timer
-						mainPanelCards.show(mainPanel, "actionPanel");
-						beforeGameActionUpdate();
-					}
-                });
-                timer.setInitialDelay(0);
-                timer.start();
-			/*
-			while (countDown > 0) {
-				repaint();
-				System.out.println("count " + countDown);
-				try {
-					TimeUnit.SECONDS.sleep(waitTime); // Wait for the specified amount of time
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				countDown--;
-				
-				
-				repaint();
-			}*/
-			//mainPanelCards.show(mainPanel, "actionPanel");
-			//beforeGameActionUpdate();
-			countDown=3;
-			
-		}
 
 	// --------------------------------------------------------------------------
     	// sets up some panels for the topActionPanel
@@ -363,32 +333,34 @@ class View extends JPanel
         	JTextArea spacing1 = new JTextArea();
         	spacing1.setMaximumSize(new Dimension(50, 200));
         	spacing1.setBackground(Color.black);
-        	spacing1.setText("                          ");
+        	spacing1.setText("                                                       ");
         	playerInfoPanel.add(spacing1);
 
-        	this.playerInfoPanel.add(actionPlayerColumns[0]); 
-        	this.playerInfoPanel.add(actionPlayerColumns[1]); 
+        	this.playerInfoPanel.add(actionPlayerColumns[0]);
+        	this.playerInfoPanel.add(actionPlayerColumns[1]);
 
-        	JTextArea spacing2 = new JTextArea();
-        	spacing2.setMaximumSize(new Dimension(70, 200));
-        	spacing2.setBackground(Color.black);
-        	playerInfoPanel.add(spacing2);
-
-        	this.playerInfoPanel.add(actionPlayerColumns[2]); 
-        	this.playerInfoPanel.add(actionPlayerColumns[3]); 
+        	this.playerInfoPanel.add(actionPlayerColumns[2]);
+        	this.playerInfoPanel.add(actionPlayerColumns[3]);
 
         	JTextArea spacing3 = new JTextArea();
         	spacing3.setMaximumSize(new Dimension(30, 200));
         	spacing3.setBackground(Color.black);
         	playerInfoPanel.add(spacing3);
 
-        	this.topActionPanel.add(teamNamePanel); 
-        	this.topActionPanel.add(playerInfoPanel); 
+        	this.topActionPanel.add(teamNamePanel);
+        	this.topActionPanel.add(playerInfoPanel);
 
         	// create rest of upper action screen
         	createTeamNamePanel();
         	createActionRedTeam();
         	createActionGreenTeam();
+		// set top 5 players to the last position
+        	// will be changed before the game starts if there are 5+ players
+        	// otherwise extra slots will be set to an empty player object
+            	for(int i = 0; i < 5; i++) {
+                	top5RedPlayerIndexes[i] = 15;
+                	top5GreenPlayerIndexes[i] = 15;
+            	}
     	}
 
     	// set up the panel that contains the team names
@@ -400,7 +372,7 @@ class View extends JPanel
             		teamnames[i].setSize(new Dimension(300, 40));
 		    	teamnames[i].setBackground(Color.BLACK);
 		    	teamnames[i].setEditable(false);
-		    	teamnames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+		    	teamnames[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 20));
         	}
         	// set text color
         	teamnames[0].setForeground(Color.RED);
@@ -408,12 +380,12 @@ class View extends JPanel
         	// set text
         	teamnames[0].setText("RED TEAM");
         	// textbox for spacing
-        	teamnames[1].setText("                                                     ");
+        	teamnames[1].setText("                                        ");
         	teamnames[2].setText("GREEN TEAM");
         	// add to panel
-        	this.teamNamePanel.add(teamnames[0]); 
-        	this.teamNamePanel.add(teamnames[1]); 
-        	this.teamNamePanel.add(teamnames[2]); 
+        	this.teamNamePanel.add(teamnames[0]);
+        	this.teamNamePanel.add(teamnames[1]);
+        	this.teamNamePanel.add(teamnames[2]);
     	}
 
     	// make text areas for red team top player info on the action screen
@@ -421,14 +393,11 @@ class View extends JPanel
     	void createActionRedTeam() {
 		//JTextArea redPlayerNames[] = new JTextArea[6];
         	//JTextArea redPlayerScores[] = new JTextArea[6];
-        
+
 		for(int i = 0; i < redPlayerNames.length; i++)
 		{
             		redPlayerNames[i] = new JTextArea();
             		redPlayerScores[i] = new JTextArea();
-
-            		// text boxes for scores have right alignment instead of left
-            		redPlayerScores[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
 			redPlayerNames[i].setEditable(false);
 			redPlayerNames[i].setForeground(Color.RED);
@@ -441,8 +410,8 @@ class View extends JPanel
 			redPlayerNames[i].setMaximumSize(new Dimension(300, 35));
             		redPlayerScores[i].setMaximumSize(new Dimension(125, 35));
 
-            		redPlayerNames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
-            		redPlayerScores[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+            		redPlayerNames[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
+            		redPlayerScores[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
 
             		// testing text
             		//redPlayerNames[i].setText("samplePlayer" + i);
@@ -454,7 +423,7 @@ class View extends JPanel
             		if(data.teamRed[i].codename != "") {
                 		redPlayerScores[i].setText("" + data.teamRed[i].score);
             		}
-            
+
 			// add to panel
 			this.actionPlayerColumns[0].add(redPlayerNames[i]);
            		this.actionPlayerColumns[1].add(redPlayerScores[i]);
@@ -475,9 +444,6 @@ class View extends JPanel
             		greenPlayerNames[i] = new JTextArea();
             		greenPlayerScores[i] = new JTextArea();
 
-            		// text boxes for scores have right alignment instead of left
-            		greenPlayerScores[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-
             		greenPlayerNames[i].setEditable(false);
 			greenPlayerNames[i].setForeground(Color.GREEN);
 			greenPlayerNames[i].setBackground(Color.BLACK);
@@ -490,8 +456,8 @@ class View extends JPanel
             		greenPlayerNames[i].setMaximumSize(new Dimension(300, 35));
             		greenPlayerScores[i].setMaximumSize(new Dimension(125, 35));
 
-            		greenPlayerNames[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
-            		greenPlayerScores[i].setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+            		greenPlayerNames[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
+            		greenPlayerScores[i].setFont(new java.awt.Font("Arial Black", Font.BOLD, 12));
 
            		// testing text
             		//greenPlayerNames[i].setText("samplePlayer" + i);
@@ -503,7 +469,7 @@ class View extends JPanel
             		if(data.teamGreen[i].codename != "") {
                 		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
             		}
-            
+
 			// add to panel
             		this.actionPlayerColumns[2].add(greenPlayerNames[i]);
             		this.actionPlayerColumns[3].add(greenPlayerScores[i]);
@@ -516,41 +482,290 @@ class View extends JPanel
     	// sets topActionScreen textboxes to info for first 5 players of each team
     	// probably shouldn't be used during a game - no score check set up yet
     	void beforeGameActionUpdate() {
-        	for(int i = 0; i < redPlayerNames.length; i++) {    
-            		redPlayerNames[i].setText(data.teamRed[i].codename);
-            		if(data.teamRed[i].codename != "") {
-                		redPlayerScores[i].setText("" + data.teamRed[i].score);
-            		}
+        	int j = 0;
+
+            	int redTeamEmptyPlayer = -1;
+            	int greenTeamEmptyPlayer = -1;
+
+            	// setup so top 5 (or all, if less than 5) players show on the top5 display
+
+            	for(int i = 0; i < data.teamRed.length; i++) {
+                	if((data.teamRed[i].codename == "") && (redTeamEmptyPlayer == -1)) {
+                    		redTeamEmptyPlayer = i;
+                	}
+                	if((data.teamRed[i].codename != "") && (j < 5)) {
+                    		top5RedPlayerIndexes[j] = i;
+                    		//System.out.println("index " + j + " is player " + i);
+                    		j++;
+                	}
         	}
-        	for(int i = 0; i < greenPlayerNames.length; i++) {    
-            		greenPlayerNames[i].setText(data.teamGreen[i].codename);
-            		if(data.teamGreen[i].codename != "") {
-                		greenPlayerScores[i].setText("" + data.teamGreen[i].score);
-            		}
+
+            	j = 0;
+        	for(int i = 0; i < data.teamGreen.length; i++) {
+                	if((data.teamGreen[i].codename == "") && (greenTeamEmptyPlayer == -1)) {
+                    		greenTeamEmptyPlayer = i;
+                	}
+                	if((data.teamGreen[i].codename != "") && (j < 5)) {
+                    		top5GreenPlayerIndexes[j] = i;
+                    		//System.out.println("index " + j + " is player " + i);
+                    		j++;
+                	}
         	}
+
+            	for(int i = 0; i < 5; i++) {
+                	if(top5RedPlayerIndexes[i] == 15) { // if there weren't enough players to initialize all 5 indexes
+                    		// set to the first nonexistent player found
+                    		top5RedPlayerIndexes[i] = redTeamEmptyPlayer;
+                    		// if there aren't enough players to fill all 5 spots, 
+                    		// set text color of empty top 5 positions to black
+                    		redPlayerScores[i].setForeground(Color.BLACK);
+                	}
+                	if(top5GreenPlayerIndexes[i] == 15) { // if there weren't enough players to initialize all 5 indexes
+                    		// set to the first nonexistent player found
+                   		top5GreenPlayerIndexes[i] = greenTeamEmptyPlayer;
+                    		greenPlayerScores[i].setForeground(Color.BLACK);
+                	}
+            	}
     	}
+	
+	// update the top5 display text and make top scores flash during gameplay
+        void top5DisplayUpdate() {
+            	// sets how quickly the text flashes
+            	blink = (blink + 1) % 20;
+		
+		// makes the blink slower / less jarring
+		if(blink % 10 == 0) {
+			// top scores are normal color
+            		redPlayerScores[5].setForeground(Color.RED);
+            		redPlayerNames[0].setForeground(Color.RED);
+            		redPlayerScores[0].setForeground(Color.RED);
+            		greenPlayerScores[5].setForeground(Color.GREEN);
+            		greenPlayerNames[0].setForeground(Color.GREEN);
+            		greenPlayerScores[0].setForeground(Color.GREEN);
+		}
+
+            	if(blink == 0) {
+                	// set top scores of top team to black text to make it "flash"
+                	if(redTotal > greenTotal) {
+                    		redPlayerScores[5].setForeground(Color.BLACK);
+                	}
+                	else if(redTotal == greenTotal) { 
+                    		// NO flashing if scores are equivalent
+                	}
+               		else {
+                    		greenPlayerScores[5].setForeground(Color.BLACK);
+                	}
+
+                	if(data.teamRed[top5RedPlayerIndexes[0]].score > data.teamGreen[top5GreenPlayerIndexes[0]].score) {
+                    		redPlayerNames[0].setForeground(Color.BLACK);
+                    		redPlayerScores[0].setForeground(Color.BLACK);
+                	}
+                	else if(data.teamRed[top5RedPlayerIndexes[0]].score == data.teamGreen[top5GreenPlayerIndexes[0]].score) { 
+                    		// NO flashing if scores are equivalent
+                	}
+                	else {
+                    		greenPlayerNames[0].setForeground(Color.BLACK);
+                    		greenPlayerScores[0].setForeground(Color.BLACK);
+                	}
+            	}
+
+            	for(int i = 0; i < redPlayerNames.length - 1; i++) {
+                	redPlayerNames[i].setText(data.teamRed[top5RedPlayerIndexes[i]].codename);
+                	String scoreSample = "" + data.teamRed[top5RedPlayerIndexes[i]].score;
+			scoreSample = String.format("%24.24s", scoreSample);
+			redPlayerScores[i].setText(scoreSample);
+            	}
+            	for(int i = 0; i < greenPlayerNames.length - 1; i++) {
+                	greenPlayerNames[i].setText(data.teamGreen[top5GreenPlayerIndexes[i]].codename);
+                	String scoreSample2 = "" + data.teamGreen[top5GreenPlayerIndexes[i]].score;
+			scoreSample2 = String.format("%24.24s", scoreSample2);
+			greenPlayerScores[i].setText(scoreSample2);
+            	}
+
+            	String scoreSample = "" + redTotal;
+		scoreSample = String.format("%24.24s", scoreSample);
+		String scoreSample2 = "" + greenTotal;
+		scoreSample2 = String.format("%24.24s", scoreSample2);
+            	redPlayerScores[5].setText(scoreSample);
+            	greenPlayerScores[5].setText(scoreSample2);
+        }
+	
+	// update cumulative team scores, update which players are considered "top 5"
+        // call display update method
+        void top5GameActionUpdate() {
+	        
+        	// update total scores
+           	redTotal = 0;
+            	greenTotal = 0;
+            	for(int i = 0; i < data.teamRed.length; i++) {
+                	redTotal += data.teamRed[i].score;
+            	}
+            	for(int i = 0; i < data.teamGreen.length; i++) {
+                	greenTotal += data.teamGreen[i].score;
+            	}
+            
+            	// update players in top score area
+            	// update top5 red team display
+            	for(int i = 0; i < data.teamRed.length; i++) {
+                	boolean same = false;
+			
+			if(data.teamRed[i].codename == "") {
+                    		continue;
+                	}
+
+                	int lowerbound = 7;
+                	for(int b = 0; b < 5; b++) {
+                    		if(data.teamRed[i].score >= data.teamRed[top5RedPlayerIndexes[b]].score) {
+                        		if(i == top5RedPlayerIndexes[b]) {
+                            			same = true;
+                            			break;
+                        		}
+                        		lowerbound = b;
+                        		break;
+                    		}
+                	}
+                	if(same) {
+                    		continue;
+                	}
+
+
+                	int sameIndex = 4; // defaults to 4, the last position in the top5 list
+                	if(lowerbound <= 4) {
+                    		// check for current position in top5 list (or check if it's even there)
+                    		for(int k = 0; k < 5; k++) {
+                        		if(i == top5RedPlayerIndexes[k]) {
+                            			sameIndex = k;
+                        		}
+                    		}
+
+				// shift list down to make room for new player 
+                    		// if #3 is moving to #1 spot, only shifts player #1 and player #2 down
+                    		// if player isn't already in the 5top list, shift the ENTIRE list down by 1
+                    		for(int j = sameIndex; j > lowerbound; j--) {
+                        		top5RedPlayerIndexes[j] = top5RedPlayerIndexes[j - 1];
+                    		}  
+                    		top5RedPlayerIndexes[lowerbound] = i;
+                	}
+            	}
+            	// update top5 green team display
+            	for(int i = 0; i < data.teamGreen.length; i++) {
+                	boolean same = false;
+			
+			if(data.teamGreen[i].codename == "") {
+                    		continue;
+                	}
+			
+                	int lowerbound = 7;
+                	for(int b = 0; b < 5; b++) {
+                    		if(data.teamGreen[i].score >= data.teamGreen[top5GreenPlayerIndexes[b]].score) {
+                        		if(i == top5GreenPlayerIndexes[b]) {
+                            			same = true;
+                            			break;
+                        		}
+                        		lowerbound = b;
+                        		break;
+                    		}
+                	}
+                	if(same) {
+                    		continue;
+                	}
+
+                	int sameIndex = 4;
+                	if(lowerbound <= 4) {
+                    		// check for current position in top5 list (or check if it's even there)
+                    		for(int k = 0; k < 5; k++) {
+                        		if(i == top5GreenPlayerIndexes[k]) {
+                            			sameIndex = k;
+                        		}
+                    		}
+
+                    		// shift list down to make room for new player 
+                    		// if #3 is moving to #1 spot, only shifts player #1 and player #2 down
+                    		// if player isn't already in the 5top list, shift the ENTIRE list down by 1
+                    		for(int j = sameIndex; j > lowerbound; j--) {
+                        		top5GreenPlayerIndexes[j] = top5GreenPlayerIndexes[j - 1];
+                    		}
+                    		top5GreenPlayerIndexes[lowerbound] = i;
+                    
+                	}
+            	}
+            
+	    	// update the display text, make top scores flash
+            	top5DisplayUpdate();
+        }
 
     	void testTopActionScreen1() {
         	// initialize some player names so they display
         	for(int i = 0; i < 5; i++) {
             		data.teamRed[i].codename = "Bob" + i;
+			data.teamRed[i].score = 7 * i + 1;
         	}
         	for(int i = 0; i < 5; i++) {
             		data.teamGreen[i].codename = "Steve" + i;
+			data.teamGreen[i].score = 5 * i + 7;
         	}
     	}
    	void testTopActionScreen2() {
         	// initialize some player names so they display
         	for(int i = 0; i < 5; i++) {
             		data.teamRed[i].codename = "John" + i;
+			data.teamRed[i].score = 15 * i + 2;
         	}
         	for(int i = 0; i < 5; i++) {
             		data.teamGreen[i].codename = "Bill" + i;
+			data.teamGreen[i].score = 17 * i + 4;
         	}
     	}
+	// --------------------------------------------------------------------------
+
+			void createTeamFeeds(){
+				//Create Red Team side
+				JPanel redTeamPanel = new JPanel();
+				redTeamPanel.setBackground(Color.RED);
+				redTeamPanel.setMaximumSize(new Dimension(17,33));
+
+				JTextArea redTeamText = new JTextArea(17,33);
+				redTeamText.setBackground(Color.BLACK);
+				redTeamText.setForeground(Color.WHITE);
+				redTeamText.setText("Bob1 hit by Steve3");
+				redTeamText.setEditable(false);
+
+				JScrollPane redTeamScrollPane = new JScrollPane(redTeamText);
+				redTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				redTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+				redTeamPanel.add(redTeamScrollPane);
+
+
+				//Create Green Team side
+				JPanel greenTeamPanel = new JPanel();
+				greenTeamPanel.setBackground(Color.GREEN);
+				greenTeamPanel.setMaximumSize(new Dimension(17,33));
+
+				JTextArea greenTeamText = new JTextArea(17,33);
+				greenTeamText.setBackground(Color.BLACK);
+				greenTeamText.setForeground(Color.WHITE);
+				greenTeamText.setText("Steve0 hit by Bob4");
+				greenTeamText.setEditable(false);
+
+				JScrollPane greenTeamScrollPane = new JScrollPane(greenTeamText);
+				greenTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				greenTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+				greenTeamPanel.add(greenTeamScrollPane);
+
+
+				//Creates a split pane between both scrollboxes
+				JSplitPane s1 = new JSplitPane(SwingConstants.VERTICAL, redTeamPanel, greenTeamPanel);
+				s1.setOrientation(SwingConstants.VERTICAL);
+				this.botActionPanel.add(s1);
+			}
+
+			void addClip(Clip a)
+			{
+				this.clip = a;
+			}
    	// --------------------------------------------------------------------------
 
-	
+
 	//static method to load an image with a string input of its name
 	public static BufferedImage loadImage(String imageName)
 	{
@@ -559,21 +774,59 @@ class View extends JPanel
 		{
 			temp = ImageIO.read(new File(imageName));
 		}
-		catch(Exception e) 
+		catch(Exception e)
 		{
 			e.printStackTrace(System.err);
 			System.exit(1);
 		}
 		return temp;
 	}
-	
+	//-----------------------------------------
+	//
+	//Countdown
+	//
+	//-----------------------------------------
+
+		void startCountDown(){
+
+			timer = new Timer(1500, (e) -> {
+
+					System.out.println("count " + countDown);
+					timerPanel = drawTimerImage(countDown);
+					mainPanelCards.addLayoutComponent(timerPanel, "timerPanel"+countDown);
+					mainPanel.add(timerPanel);
+					mainPanelCards.show(mainPanel, "timerPanel"+countDown);
+
+					 countDown--;
+					 repaint();
+					 if (countDown == 10){
+						clip.start();
+					}
+
+					if (countDown == -1) { // countdown finished
+						timer.stop(); // stop the timer
+						//THIS LINE STARTS THE GAME SCREEN
+						mainPanelCards.show(mainPanel, "actionPanel");
+						beforeGameActionUpdate();
+						
+						gameActive = true;
+					}
+                });
+                timer.setInitialDelay(0);
+
+
+                timer.start();
+
+			countDown=30;
+
+		}
 	public static JPanel drawTimerImage(int num) {
         JPanel panel = new JPanel() {
 		BufferedImage countImage;
 
             {
                 try {
-					countImage = ImageIO.read(new File("count_"+(num)+".png"));
+					countImage = ImageIO.read(new File("timer/count_"+(num)+".png"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

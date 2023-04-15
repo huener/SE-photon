@@ -37,7 +37,7 @@ class View extends JPanel
     	boolean splash = false;
 
 	//Timer Variables
-	int countDown = 3; //number from which we count down
+	int countDown = 30; //number from which we count down
 	Timer  timer;
 
 
@@ -789,7 +789,7 @@ class View extends JPanel
 
 		void startCountDown(){
 
-			timer = new Timer(1000, (e) -> {
+			timer = new Timer(1500, (e) -> {
 
 					System.out.println("count " + countDown);
 					timerPanel = drawTimerImage(countDown);
@@ -799,6 +799,10 @@ class View extends JPanel
 
 					 countDown--;
 					 repaint();
+					 if (countDown == 11){
+						clip.start();
+					}
+
 					if (countDown == -1) { // countdown finished
 						timer.stop(); // stop the timer
 						//THIS LINE STARTS THE GAME SCREEN
@@ -809,10 +813,11 @@ class View extends JPanel
 					}
                 });
                 timer.setInitialDelay(0);
-				clip.start();
+
+
                 timer.start();
 
-			countDown=3;
+			countDown=30;
 
 		}
 	public static JPanel drawTimerImage(int num) {
@@ -821,7 +826,7 @@ class View extends JPanel
 
             {
                 try {
-					countImage = ImageIO.read(new File("count_"+(num)+".png"));
+					countImage = ImageIO.read(new File("timer/count_"+(num)+".png"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
