@@ -104,8 +104,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	public void focusGained(FocusEvent e)
 	{
 		char[] name = ((e.getComponent()).getName()).toCharArray();
+		char field = name[0];
 		char team = name[1];
-		
 		String indexStr = "";
 		int index = 0;
 		for(int i = 2; i < name.length; i++)
@@ -113,11 +113,19 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			indexStr = indexStr + name[i];
 			index = Integer.parseInt(indexStr);
 		}
-
+		
 		if (team == 'R')
+		{
 			focus = data.teamRed[index];
+		}
 		else
+		{
 			focus = data.teamGreen[index];
+		}
+		if(field == 'I')
+		{
+			focus.resetTextFields();
+		}
 	}
 
 	public void focusLost(FocusEvent e)
@@ -180,7 +188,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		{
 			// enable editing the text fields and database querying upon player focus loss
 			//editTextFields(true);//commented 3/11/23
-
 			try
 			{
 				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename.charAt(0) != 0))

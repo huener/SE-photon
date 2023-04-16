@@ -89,11 +89,18 @@ class Player
 	//nameField can only be editable when id has been input, idField can only be editable when it hasn't been input already
 	void textFieldsEditable(Boolean editVal)
 	{
-		idField.setEditable(editVal && !idIn);
-		idField.setRequestFocusEnabled(editVal && !idIn);
+		idField.setEditable((editVal && !idIn) || (idIn && nameIn));
+		idField.setRequestFocusEnabled((editVal && !idIn) || (idIn && nameIn));
 		nameField.setEditable(editVal && idIn && !nameIn);
 		nameField.setFocusable(editVal && (!nameIn || !idIn));
 		nameField.setRequestFocusEnabled(editVal && (!nameIn || !idIn));
+	}
+	void resetTextFields()
+	{
+		idIn = false;
+		nameIn = false;
+		idField.setText("");
+		nameField.setText("");
 	}
 	//checks if an id exists in the database, sets name field as such
 	void queryForName()
