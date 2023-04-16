@@ -88,20 +88,13 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 
 	public void actionPerformed(ActionEvent e)	{	}
-
+	//nameField is only editable when idField is editable, 
 	void editTextFields(Boolean editVal)
 	{
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
-			data.teamRed[i].idField.setEditable(editVal);
-			data.teamRed[i].nameField.setEditable(editVal);
-			data.teamRed[i].idField.setRequestFocusEnabled(editVal);
-			data.teamRed[i].nameField.setRequestFocusEnabled(editVal);
-
-			data.teamGreen[i].idField.setEditable(editVal);
-			data.teamGreen[i].nameField.setEditable(editVal);
-			data.teamGreen[i].idField.setRequestFocusEnabled(editVal);
-			data.teamGreen[i].nameField.setRequestFocusEnabled(editVal);
+			data.teamRed[i].textFieldsEditable(editVal);
+			data.teamGreen[i].textFieldsEditable(editVal);
 		}
 	}
 
@@ -154,6 +147,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				if(prevFocus.playerID != Integer.parseInt(prevFocus.idField.getText()))
 				{
 					prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
+					prevFocus.setIdIn();
+					prevFocus.queryForName();
 				}
 			}
 			catch(Exception x)
@@ -162,11 +157,13 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			}
 
 		}
-
 		else
 		{
 			if (prevFocus.codename != (prevFocus.nameField.getText()))
+			{
 				prevFocus.codename = prevFocus.nameField.getText();
+				prevFocus.setNameIn();
+			}
 		}
 
 	}

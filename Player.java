@@ -14,7 +14,7 @@ class Player
 	Dimension idSize, nameSize;
 	JTextArea playerNumText;
 	int score;
-
+	Boolean idIn, nameIn;
 	public Player(String codename, int playerID, String tableIndex)
 	{
 		this.codename = codename;
@@ -22,6 +22,8 @@ class Player
 		this.tableIndex = tableIndex;
 		setTextFields();
 		score = 0;
+		idIn = false;
+		nameIn = false;
 	}
 
 	public Player(String codename, String tableIndex)
@@ -31,6 +33,8 @@ class Player
 		this.tableIndex = tableIndex;
 		setTextFields();
 		score = 0;
+		idIn = false;
+		nameIn = false;
 	}
 
 	public Player(int playerID, String tableIndex)
@@ -40,6 +44,8 @@ class Player
 		this.tableIndex = tableIndex;
 		setTextFields();
 		score = 0;
+		idIn = false;
+		nameIn = false;
 	}
 
 	public Player(String tableIndex)
@@ -49,6 +55,8 @@ class Player
 		this.tableIndex = tableIndex;
 		setTextFields();
 		score = 0;
+		idIn = false;
+		nameIn = false;
 	}
 
 	void setTextFields()
@@ -64,10 +72,35 @@ class Player
 		playerNumText.setBackground(Color.BLACK);
 		playerNumText.setEditable(false);
 		playerNumText.setFont(new java.awt.Font("Arial", Font.PLAIN, 15));
-
 		idSize = idField.getPreferredSize();
 		nameSize = nameField.getPreferredSize();
 	}
+	//sets idIn to true
+	void setIdIn()
+	{
+		idIn = true;
+	}
+	void setNameIn()
+	{
+		nameIn = true;
+	}
+	//sets text field editability
+	//nameField can only be editable when id has been input, idField can only be editable when it hasn't been input already
+	void textFieldsEditable(Boolean editVal)
+	{
+		idField.setEditable(editVal && !idIn);
+		idField.setRequestFocusEnabled(editVal && !idIn);
+		nameField.setEditable(editVal && idIn && !nameIn);
+		nameField.setFocusable(editVal && (!nameIn || !idIn));
+		nameField.setRequestFocusEnabled(editVal && (!nameIn || !idIn));
+	}
+	void queryForName()
+	{
+		if(Data.checkForID(Integer.parseInt(idField.getText())))
+		{
+			nameField.setText(Data.getCodeName(Integer.parseInt(idField.getText())));
+			nameIn = true;
+		}
 
-
+	}
 }
