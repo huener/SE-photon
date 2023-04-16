@@ -80,6 +80,7 @@ class Player
 	{
 		idIn = true;
 	}
+	//sets nameIn to true
 	void setNameIn()
 	{
 		nameIn = true;
@@ -94,6 +95,7 @@ class Player
 		nameField.setFocusable(editVal && (!nameIn || !idIn));
 		nameField.setRequestFocusEnabled(editVal && (!nameIn || !idIn));
 	}
+	//checks if an id exists in the database, sets name field as such
 	void queryForName()
 	{
 		if(Data.checkForID(Integer.parseInt(idField.getText())))

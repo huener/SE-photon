@@ -162,7 +162,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			if (prevFocus.codename != (prevFocus.nameField.getText()))
 			{
 				prevFocus.codename = prevFocus.nameField.getText();
-				prevFocus.setNameIn();
 			}
 		}
 
@@ -188,6 +187,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				{
 					System.out.println("Sending player info to database: " + prevFocus.playerID + " | " + prevFocus.codename);
 					Data.insertPlayer(prevFocus.playerID, prevFocus.codename);
+					prevFocus.setNameIn();
 					prevFocus = focus;
 				}
 			}
