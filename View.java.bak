@@ -18,6 +18,7 @@ import javax.swing.border.Border;
 // import javax.swing.text.FlowView;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
+import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.awt.ComponentOrientation;
 // import java.util.concurrent.TimeUnit;
@@ -39,7 +40,8 @@ class View extends JPanel
 	//Timer Variables
 	int countDown = 30; //number from which we count down
 	Timer  timer;
-
+	int minutes;
+	int secondsElapsed;
 
 
 	//Panels Framework
@@ -52,6 +54,7 @@ class View extends JPanel
 	JPanel topActionPanel;
    	JPanel botActionPanel;
     JPanel timeActionPanel;
+	JLabel timeLabel;
 
 	JPanel playerInfoPanel;
     	JPanel teamNamePanel;
@@ -280,10 +283,14 @@ class View extends JPanel
 		botActionPanel.setFocusTraversalKeysEnabled(false);
 		createTeamFeeds();
 
+		//where the countdown goes
 		timeActionPanel.setBackground(Color.red);
 		timeActionPanel.addKeyListener(controller);
 		timeActionPanel.setFocusable(true);
 		timeActionPanel.setFocusTraversalKeysEnabled(false);
+		timeLabel = new JLabel("00:00");
+		timeLabel.setForeground(Color.WHITE);
+		timeActionPanel.add(timeLabel);
 
 		mainPanelCards.addLayoutComponent(actionPanel, "actionPanel");
 		mainPanel.add(actionPanel);
@@ -333,7 +340,8 @@ class View extends JPanel
         	JTextArea spacing1 = new JTextArea();
         	spacing1.setMaximumSize(new Dimension(50, 200));
         	spacing1.setBackground(Color.black);
-        	spacing1.setText("                                                       ");
+
+        	spacing1.setText("                                                      ");
         	playerInfoPanel.add(spacing1);
 
         	this.playerInfoPanel.add(actionPlayerColumns[0]);
@@ -751,6 +759,7 @@ class View extends JPanel
 				greenTeamScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				greenTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 				greenTeamPanel.add(greenTeamScrollPane);
+			
 
 
 				//Creates a split pane between both scrollboxes
@@ -799,7 +808,7 @@ class View extends JPanel
 
 					 countDown--;
 					 repaint();
-					 if (countDown == 10){
+					 if (countDown == 11){
 						clip.start();
 					}
 
@@ -810,6 +819,7 @@ class View extends JPanel
 						beforeGameActionUpdate();
 						
 						gameActive = true;
+						startActionCountDown();
 					}
                 });
                 timer.setInitialDelay(0);
@@ -819,6 +829,26 @@ class View extends JPanel
 
 			countDown=30;
 
+		}
+		
+		void startActionCountDown(){
+			minutes = 6;
+			secondsElapsed = 0;			
+			timer = new Timer(1000, (e) -> {
+				secondsElapsed++;
+				if (secondsElapsed >= minutes*60){
+					timer.stop();
+					mainPanelCards.show(mainPanel, "entryPanel");
+				}
+				int minsElapsed = (minutes-1)-(int)(secondsElapsed/60);
+				int secsMod = 59-secondsElapsed%60;
+				String minsFormat = String.format("%02d", minsElapsed);
+				String secsFormat = String.format("%02d", secsMod);
+				label.setFont(new Font("Verdana", Font.BOLD, 30));
+				timeLabel.setText(minsFormat + ":" + secsFormat);
+			});
+			timer.setInitialDelay(0);
+			timer.start();
 		}
 	public static JPanel drawTimerImage(int num) {
         JPanel panel = new JPanel() {
