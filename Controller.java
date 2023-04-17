@@ -96,7 +96,6 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
 			data.teamRed[i].textFieldsEditable(editVal, maxRedField >= i);
-			System.out.println(maxRedField);
 			data.teamGreen[i].textFieldsEditable(editVal, maxGreenField >= i);
 		}
 	}
