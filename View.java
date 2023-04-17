@@ -80,6 +80,9 @@ class View extends JPanel
         int top5GreenPlayerIndexes[] = new int[5];
         int blink = 0;
         boolean gameActive = false;
+	
+	JTextArea redTeamText;
+	JTextArea greenTeamText;
 
     	View(Controller c, Data d)
 	{
@@ -766,6 +769,23 @@ class View extends JPanel
 				JSplitPane s1 = new JSplitPane(SwingConstants.VERTICAL, redTeamPanel, greenTeamPanel);
 				s1.setOrientation(SwingConstants.VERTICAL);
 				this.botActionPanel.add(s1);
+			}
+			
+			void ActionFeedUpdate(int winIndex, int loseIndex, char team){
+				if(team == 'r'){
+					String redTeamMessage = data.teamRed[winIndex].codename + " hit " + data.teamGreen[loseIndex].codename;
+					redTeamText.append(redTeamMessage + "\n");
+				}
+				else if(team == 'g'){
+					String greenTeamMessage = data.teamGreen[winIndex].codename + " hit " + data.teamRed[loseIndex].codename;
+					greenTeamText.append(greenTeamMessage + "\n");
+				}
+
+				DefaultCaret redCaret = (DefaultCaret)redTeamText.getCaret();
+				redCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+				DefaultCaret greenCaret = (DefaultCaret)greenTeamText.getCaret();
+				greenCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 			}
 
 			void addClip(Clip a)
