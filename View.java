@@ -4,7 +4,7 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-
+import javax.swing.text.DefaultCaret;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.BoxLayout;
