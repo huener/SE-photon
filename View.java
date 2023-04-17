@@ -735,10 +735,9 @@ class View extends JPanel
 				redTeamPanel.setBackground(Color.RED);
 				redTeamPanel.setMaximumSize(new Dimension(17,33));
 
-				JTextArea redTeamText = new JTextArea(17,33);
+				redTeamText = new JTextArea(17,37);
 				redTeamText.setBackground(Color.BLACK);
 				redTeamText.setForeground(Color.WHITE);
-				redTeamText.setText("Bob1 hit by Steve3");
 				redTeamText.setEditable(false);
 
 				JScrollPane redTeamScrollPane = new JScrollPane(redTeamText);
@@ -752,10 +751,9 @@ class View extends JPanel
 				greenTeamPanel.setBackground(Color.GREEN);
 				greenTeamPanel.setMaximumSize(new Dimension(17,33));
 
-				JTextArea greenTeamText = new JTextArea(17,33);
+				greenTeamText = new JTextArea(17,37);
 				greenTeamText.setBackground(Color.BLACK);
 				greenTeamText.setForeground(Color.WHITE);
-				greenTeamText.setText("Steve0 hit by Bob4");
 				greenTeamText.setEditable(false);
 
 				JScrollPane greenTeamScrollPane = new JScrollPane(greenTeamText);
