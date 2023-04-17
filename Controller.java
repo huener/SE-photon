@@ -207,7 +207,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 				prevFocus = focus;
 			}
 		}
-		//this is honestly an incredibly sloppy way to do this, but it was the best I could think of
+		//sets the max-changable field on each side to the lowest completed field + 1
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
 			if(data.teamRed[i].filledIn())

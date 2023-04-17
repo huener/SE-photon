@@ -66,7 +66,8 @@ class Player
 		nameField = new JTextField(15);
 		idField.setName('I' + tableIndex);
 		nameField.setName('N' + tableIndex);
-
+		idField.setEditable(false);
+		nameField.setEditable(false);
 		playerNumText = new JTextArea();
 		playerNumText.setForeground(Color.WHITE);
 		playerNumText.setBackground(Color.BLACK);
@@ -110,7 +111,6 @@ class Player
 			nameField.setText(Data.getCodeName(Integer.parseInt(idField.getText())));
 			nameIn = true;
 		}
-
 	}
 	Boolean filledIn()
 	{
