@@ -761,7 +761,11 @@ class View extends JPanel
 				greenTeamScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 				greenTeamPanel.add(greenTeamScrollPane);
 			
+				DefaultCaret redCaret = (DefaultCaret)redTeamText.getCaret();
+				redCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
+				DefaultCaret greenCaret = (DefaultCaret)greenTeamText.getCaret();
+				greenCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 				//Creates a split pane between both scrollboxes
 				JSplitPane s1 = new JSplitPane(SwingConstants.VERTICAL, redTeamPanel, greenTeamPanel);
@@ -778,12 +782,6 @@ class View extends JPanel
 					String greenTeamMessage = data.teamGreen[winIndex].codename + " hit " + data.teamRed[loseIndex].codename;
 					greenTeamText.append(greenTeamMessage + "\n");
 				}
-
-				DefaultCaret redCaret = (DefaultCaret)redTeamText.getCaret();
-				redCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-
-				DefaultCaret greenCaret = (DefaultCaret)greenTeamText.getCaret();
-				greenCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 			}
 
 			void addClip(Clip a)
