@@ -100,6 +100,7 @@ class Player
 	{
 		nameIn = false;
 		nameField.setText("");
+		codename = "";
 	}
 	//checks if an id exists in the database, sets name field as such
 	void queryForName()
