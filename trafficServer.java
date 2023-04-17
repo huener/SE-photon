@@ -54,6 +54,10 @@ public class trafficServer implements Runnable
 				int slice = message.indexOf(':');
 				int winner = Integer.parseInt(message.substring(0,slice));
 				int loser = Integer.parseInt(message.substring(slice+1));
+				
+				int winnerIndex = -5;
+				int loserIndex = -5;
+				char team = 'r';
 
 				// Send scoring data to appropriate player
 				for (int i = 0; i < d.teamRed.length; i++)
@@ -62,6 +66,8 @@ public class trafficServer implements Runnable
 					{
 						d.teamRed[i].score += 10;
 						System.out.println("Red " + d.teamRed[i].codename + " +10");
+						winnerIndex = i;
+						team = 'r';
 					}
 					if(d.teamRed[i].playerID == loser)
 					{
@@ -70,6 +76,7 @@ public class trafficServer implements Runnable
 							d.teamRed[i].score -= 10;
 							System.out.println("Red " + d.teamRed[i].codename + " -10");
 						}
+						loserIndex = i;
 					}
 				}
 				
@@ -79,6 +86,8 @@ public class trafficServer implements Runnable
 					{
 						d.teamGreen[i].score += 10;
 						System.out.println("Green " + d.teamGreen[i].codename + " +10");
+						winnerIndex = i;
+						team = 'g';
 					}
 					if(d.teamGreen[i].playerID == loser)
 					{
@@ -88,9 +97,10 @@ public class trafficServer implements Runnable
 							d.teamGreen[i].score -= 10;
 							System.out.println("Green " + d.teamGreen[i].codename + " -10");
 						}
+						loserIndex = i;
 					}
 				}
-
+				v.ActionFeedUpdate(winnerIndex, loserIndex, team);
 			}
 
 			// Exit the server if the client sends "bye"
