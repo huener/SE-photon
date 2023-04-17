@@ -91,17 +91,14 @@ class Player
 	void textFieldsEditable(Boolean editVal, Boolean maxField)
 	{
 		idField.setEditable(((editVal && !idIn) || (idIn && nameIn)) && maxField);
-		idField.setFocusable(editVal && !idIn && maxField);
 		idField.setRequestFocusEnabled(((editVal && !idIn) || (idIn && nameIn)) && maxField);
 		nameField.setEditable((editVal && idIn && !nameIn) && maxField);
 		nameField.setFocusable((editVal && (!nameIn || !idIn)) && maxField);
 		nameField.setRequestFocusEnabled((editVal && (!nameIn || !idIn)) && maxField);
 	}
-	void resetTextFields()
+	void resetNameField()
 	{
-		idIn = false;
 		nameIn = false;
-		idField.setText("");
 		nameField.setText("");
 	}
 	//checks if an id exists in the database, sets name field as such

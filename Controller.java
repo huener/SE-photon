@@ -20,7 +20,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	boolean editMode;
 	int mainPanelSelect, maxRedField, maxGreenField;		// replaced entryMode	0 = view.entryPanel		1 = view.actionPanel	Use in an if statement to change keyboard functionality based on which game mode you are in
 	Player focus, prevFocus;
-
+	String tempstr;
 
 	public Controller(Data data)
 	{
@@ -126,7 +126,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		}
 		if(field == 'I')
 		{
-			focus.resetTextFields();
+			tempstr = focus.idField.getText();
 		}
 	}
 
@@ -152,14 +152,16 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		}
 		if(field == 'I')
 		{
+			if(tempstr.length() != 0 && !tempstr.equals(prevFocus.idField.getText()))
+			{
+				prevFocus.resetNameField();
+			}
 			try
 			{
-				if(prevFocus.playerID != Integer.parseInt(prevFocus.idField.getText()))
-				{
-					prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
-					prevFocus.setIdIn();
-					prevFocus.queryForName();
-				}
+				prevFocus.playerID = Integer.parseInt(prevFocus.idField.getText());
+				prevFocus.setIdIn();
+				prevFocus.queryForName();
+				
 			}
 			catch(Exception x)
 			{
