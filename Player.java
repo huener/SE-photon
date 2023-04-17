@@ -91,6 +91,7 @@ class Player
 	void textFieldsEditable(Boolean editVal, Boolean maxField)
 	{
 		idField.setEditable(((editVal && !idIn) || (idIn && nameIn)) && maxField);
+		idField.setFocusable(editVal && !idIn && maxField);
 		idField.setRequestFocusEnabled(((editVal && !idIn) || (idIn && nameIn)) && maxField);
 		nameField.setEditable((editVal && idIn && !nameIn) && maxField);
 		nameField.setFocusable((editVal && (!nameIn || !idIn)) && maxField);
