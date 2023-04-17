@@ -87,13 +87,13 @@ class Player
 	}
 	//sets text field editability
 	//nameField can only be editable when id has been input, idField can only be editable when it hasn't been input already
-	void textFieldsEditable(Boolean editVal)
+	void textFieldsEditable(Boolean editVal, Boolean maxField)
 	{
-		idField.setEditable((editVal && !idIn) || (idIn && nameIn));
-		idField.setRequestFocusEnabled((editVal && !idIn) || (idIn && nameIn));
-		nameField.setEditable(editVal && idIn && !nameIn);
-		nameField.setFocusable(editVal && (!nameIn || !idIn));
-		nameField.setRequestFocusEnabled(editVal && (!nameIn || !idIn));
+		idField.setEditable(((editVal && !idIn) || (idIn && nameIn)) && maxField);
+		idField.setRequestFocusEnabled(((editVal && !idIn) || (idIn && nameIn)) && maxField);
+		nameField.setEditable((editVal && idIn && !nameIn) && maxField);
+		nameField.setFocusable((editVal && (!nameIn || !idIn)) && maxField);
+		nameField.setRequestFocusEnabled((editVal && (!nameIn || !idIn)) && maxField);
 	}
 	void resetTextFields()
 	{
@@ -111,5 +111,9 @@ class Player
 			nameIn = true;
 		}
 
+	}
+	Boolean filledIn()
+	{
+		return nameField.getText().length() != 0;
 	}
 }

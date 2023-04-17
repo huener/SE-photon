@@ -18,7 +18,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 
 	// Mode selectors
 	boolean editMode;
-	int mainPanelSelect;		// replaced entryMode	0 = view.entryPanel		1 = view.actionPanel	Use in an if statement to change keyboard functionality based on which game mode you are in
+	int mainPanelSelect, maxRedField, maxGreenField;		// replaced entryMode	0 = view.entryPanel		1 = view.actionPanel	Use in an if statement to change keyboard functionality based on which game mode you are in
 	Player focus, prevFocus;
 
 
@@ -27,6 +27,8 @@ class Controller implements ActionListener, KeyListener, FocusListener
 		this.data = data;
 		editMode = true;
 		mainPanelSelect = 0;
+		maxRedField = 0;
+		maxGreenField = 0;
 		focus = data.teamRed[0];
 		prevFocus = focus;
 	}
@@ -93,8 +95,9 @@ class Controller implements ActionListener, KeyListener, FocusListener
 	{
 		for(int i = 0; i < data.teamRed.length; i++)
 		{
-			data.teamRed[i].textFieldsEditable(editVal);
-			data.teamGreen[i].textFieldsEditable(editVal);
+			data.teamRed[i].textFieldsEditable(editVal, maxRedField >= i);
+			System.out.println(maxRedField);
+			data.teamGreen[i].textFieldsEditable(editVal, maxGreenField >= i);
 		}
 	}
 
@@ -170,6 +173,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			if (prevFocus.codename != (prevFocus.nameField.getText()))
 			{
 				prevFocus.codename = prevFocus.nameField.getText();
+
 			}
 		}
 
@@ -190,7 +194,7 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			//editTextFields(true);//commented 3/11/23
 			try
 			{
-				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename.charAt(0) != 0))
+				if ((focus != prevFocus) && (prevFocus.playerID > 0) && (prevFocus.codename.length() != 0))
 				{
 					System.out.println("Sending player info to database: " + prevFocus.playerID + " | " + prevFocus.codename);
 					Data.insertPlayer(prevFocus.playerID, prevFocus.codename);
@@ -202,6 +206,18 @@ class Controller implements ActionListener, KeyListener, FocusListener
 			{
 				System.out.println("Non-player field focused...");
 				prevFocus = focus;
+			}
+		}
+		//this is honestly an incredibly sloppy way to do this, but it was the best I could think of
+		for(int i = 0; i < data.teamRed.length; i++)
+		{
+			if(data.teamRed[i].filledIn())
+			{
+				maxRedField = i + 1;
+			}
+			if(data.teamGreen[i].filledIn())
+			{
+				maxGreenField = i + 1;
 			}
 		}
 	}
