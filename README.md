@@ -13,7 +13,7 @@ Python3 trafficGenerator.py
 ```
 Then, compile and run the Photon software from command line:
 ```
-javac Main.java Controller.java Data.java Player.java View.java
+javac Main.java Controller.java Data.java Player.java View.java trafficServer.java
 java Main
 ```
 
